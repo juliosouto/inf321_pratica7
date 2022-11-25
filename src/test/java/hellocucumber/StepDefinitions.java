@@ -18,7 +18,10 @@ class IsItFriday {
 
 public class StepDefinitions {
 
-    private String senha_confirmacao;
+    private String senhaConfirmacao;
+
+    private String today;
+
     private String actualAnswer;
 
     private Throwable throwable;
@@ -414,36 +417,78 @@ public class StepDefinitions {
         System.out.println("throw new io.cucumber.java.PendingException();");
     }
 
-    // region Alterar Senha
-    @Então("Devo receber mensagem de erro {string}")
-    public void deve_receber(String string) {
-        System.out.println("resultado = " + string);
-    }
-
     @E("senha de confirmação {string} batem")
     public void senha_confirmacao_bate(String string) {
         this.formFill = true;
-        this.senha_confirmacao = string;
+        this.senhaConfirmacao = string;
     }
 
     @E("senha de confirmação {string} não batem")
     public void senha_confirmacao_nao_bate(String string) {
         this.formFill = true;
-        this.senha_confirmacao = string;
+        this.senhaConfirmacao = string;
     }
 
     @Quando("a {string} menor que 8 caracteres")
     public void senha_menor_oito(String string) {
-        System.out.println("resultado = " + string + " " + this.senha_confirmacao);
+        System.out.println("resultado = " + string + " " + this.senhaConfirmacao);
     }
 
     @Quando("a {string} nova for vazia")
     public void senha_e_vazia(String string) {
-        System.out.println("resultado = " + string + " " + this.senha_confirmacao);
+        System.out.println("resultado = " + string + " " + this.senhaConfirmacao);
     }
 
     @Quando("a {string} nova não bate com a confirmação")
     public void senha_nao_bate_confirmacao(String string) {
-        System.out.println("resultado = " + string + " " + this.senha_confirmacao);
+        System.out.println("resultado = " + string + " " + this.senhaConfirmacao);
     }
+
+    @Dado("que {string} está cadastrado na aplicação")
+    public void que_está_cadastrado_na_aplicação(String string) {
+        // Write code here that turns the phrase above into concrete actions
+        // TODO
+        System.out.println("Write code here that turns the phrase above into concrete actions");
+        System.out.println("throw new io.cucumber.java.PendingException();");
+    }
+
+    @Dado("que ele acessou o caminho My Account -> Sign In")
+    public void que_ele_acessou_o_caminho_my_account_sign_in() {
+        // Write code here that turns the phrase above into concrete actions
+        // TODO
+        System.out.println("Write code here that turns the phrase above into concrete actions");
+        System.out.println("throw new io.cucumber.java.PendingException();");
+    }
+
+    @Quando("João tenta logar com {string} e com {string}")
+    public void joão_tenta_logar_com_e_com(String string, String string2) {
+        // Write code here that turns the phrase above into concrete actions
+        // TODO
+        System.out.println("Write code here that turns the phrase above into concrete actions");
+        System.out.println("throw new io.cucumber.java.PendingException();");
+    }
+
+    @Então("a aplicacao deve receber uma mensagem de credenciais invalidas")
+    public void a_aplicacao_deve_receber_uma_mensagem_de_credenciais_invalidas() {
+        // Write code here that turns the phrase above into concrete actions
+        // TODO
+        System.out.println("Write code here that turns the phrase above into concrete actions");
+        System.out.println("throw new io.cucumber.java.PendingException();");
+    }
+
+    @Quando("Joao digitar corretamente as credenciais {string} e {string}:")
+    public void joao_digitar_corretamente_as_credenciais_e(String string, String string2) {
+        // Write code here that turns the phrase above into concrete actions
+        // TODO
+        System.out.println("Write code here that turns the phrase above into concrete actions");
+        System.out.println("throw new io.cucumber.java.PendingException();");
+    }
+    @Então("a aplicação deve exibir corretamente o {string} e carrinho conforme ultimo estado")
+    public void a_aplicação_deve_exibir_corretamente_o_e_carrinho_conforme_ultimo_estado(String string) {
+        // Write code here that turns the phrase above into concrete actions
+        // TODO
+        System.out.println("Write code here that turns the phrase above into concrete actions");
+        System.out.println("throw new io.cucumber.java.PendingException();");
+    }
+
 }
