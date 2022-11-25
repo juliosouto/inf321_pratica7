@@ -18,8 +18,7 @@ class IsItFriday {
 
 public class StepDefinitions {
 
-    private String today;
-
+    private String senha_confirmacao;
     private String actualAnswer;
 
     private Throwable throwable;
@@ -74,7 +73,7 @@ public class StepDefinitions {
 
     @Quando("é inserido {string} com {string} com {string} com {string} com {string} com {string} com {string}")
     public void é_inserido_com_com_com_com_com_com(String string, String string2, String string3, String string4,
-                                                   String string5, String string6, String string7) {
+            String string5, String string6, String string7) {
         // Write code here that turns the phrase above into concrete actions
         // TODO
         System.out.println("string = " + string + ", string2 = " + string2 + ", string3 = " + string3 + ", string4 = "
@@ -415,4 +414,36 @@ public class StepDefinitions {
         System.out.println("throw new io.cucumber.java.PendingException();");
     }
 
+    // region Alterar Senha
+    @Então("Devo receber mensagem de erro {string}")
+    public void deve_receber(String string) {
+        System.out.println("resultado = " + string);
+    }
+
+    @E("senha de confirmação {string} batem")
+    public void senha_confirmacao_bate(String string) {
+        this.formFill = true;
+        this.senha_confirmacao = string;
+    }
+
+    @E("senha de confirmação {string} não batem")
+    public void senha_confirmacao_nao_bate(String string) {
+        this.formFill = true;
+        this.senha_confirmacao = string;
+    }
+
+    @Quando("a {string} menor que 8 caracteres")
+    public void senha_menor_oito(String string) {
+        System.out.println("resultado = " + string + " " + this.senha_confirmacao);
+    }
+
+    @Quando("a {string} nova for vazia")
+    public void senha_e_vazia(String string) {
+        System.out.println("resultado = " + string + " " + this.senha_confirmacao);
+    }
+
+    @Quando("a {string} nova não bate com a confirmação")
+    public void senha_nao_bate_confirmacao(String string) {
+        System.out.println("resultado = " + string + " " + this.senha_confirmacao);
+    }
 }
