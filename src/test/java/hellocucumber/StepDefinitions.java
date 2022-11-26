@@ -59,15 +59,16 @@ public class StepDefinitions {
 
     /*** Código da documentação acima: https://cucumber.io/docs/guides/10-minute-tutorial/?lang=java **********/
 
-    @E("preencheu o formulário para realizar o cadastrado")
-    public void preencheuOFormulárioParaRealizarOCadastrado() {
+    @Given("Dado que {string} acessou o site da multibags e entrou em Register")
+    public void dado_que_acessou_o_site_da_multibags_e_entrou_em_register(String string) {
         // Write code here that turns the phrase above into concrete actions
+        // TODO
         System.out.println("Write code here that turns the phrase above into concrete actions");
         System.out.println("throw new io.cucumber.java.PendingException();");
     }
 
-    @Dado("que {string} acessou o site da multibags e entrou em Register")
-    public void queAcessouOSiteDaMultibagsEEntrouEmRegister(final String name) {
+    @Dado("preencheu o formulário para realizar o cadastrado")
+    public void preencheu_o_formulário_para_realizar_o_cadastrado() {
         // Write code here that turns the phrase above into concrete actions
         // TODO
         System.out.println("Write code here that turns the phrase above into concrete actions");
@@ -75,12 +76,9 @@ public class StepDefinitions {
     }
 
     @Quando("é inserido {string} com {string} com {string} com {string} com {string} com {string} com {string}")
-    public void é_inserido_com_com_com_com_com_com(String string, String string2, String string3, String string4,
-            String string5, String string6, String string7) {
+    public void é_inserido_com_com_com_com_com_com(String string, String string2, String string3, String string4, String string5, String string6, String string7) {
         // Write code here that turns the phrase above into concrete actions
         // TODO
-        System.out.println("string = " + string + ", string2 = " + string2 + ", string3 = " + string3 + ", string4 = "
-                + string4 + ", string5 = " + string5 + ", string6 = " + string6 + ", string7 = " + string7);
         System.out.println("Write code here that turns the phrase above into concrete actions");
         System.out.println("throw new io.cucumber.java.PendingException();");
     }
@@ -89,7 +87,6 @@ public class StepDefinitions {
     public void o_resultado_será(String string) {
         // Write code here that turns the phrase above into concrete actions
         // TODO
-        System.out.println("string = " + string);
         System.out.println("Write code here that turns the phrase above into concrete actions");
         System.out.println("throw new io.cucumber.java.PendingException();");
     }
@@ -98,7 +95,14 @@ public class StepDefinitions {
     public void a_resposta_será(String string) {
         // Write code here that turns the phrase above into concrete actions
         // TODO
-        System.out.println("string = " + string);
+        System.out.println("Write code here that turns the phrase above into concrete actions");
+        System.out.println("throw new io.cucumber.java.PendingException();");
+    }
+
+    @Dado("que {string} acessou o site da multibags e entrou em Register")
+    public void queAcessouOSiteDaMultibagsEEntrouEmRegister(final String name) {
+        // Write code here that turns the phrase above into concrete actions
+        // TODO
         System.out.println("Write code here that turns the phrase above into concrete actions");
         System.out.println("throw new io.cucumber.java.PendingException();");
     }

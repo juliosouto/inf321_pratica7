@@ -1,11 +1,13 @@
 #encoding:utf-8
 
-Feature: Criar conta
-
-  Como usuario gostaria de criar uma conta no multibags
+Feature: Cadastro de nova conta
+  Como usuário
+  "Pedro" deseja cadastrar uma nova conta
+  Para que "Pedro" possa efetuar comprar no site
 
   Background:
-    Given Estou em http://multibags.1dt.com.br/shop/customer/registration.html
+    Given Dado que "Pedro" acessou o site da multibags e entrou em Register
+    And preencheu o formulário para realizar o cadastrado
 
 
   @falha
