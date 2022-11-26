@@ -8,12 +8,50 @@ import io.cucumber.java.pt.E;
 import io.cucumber.java.pt.Então;
 import io.cucumber.java.pt.Quando;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class IsItFriday {
     static String isItFriday(String today) {
         return "Friday".equals(today) ? "TGIF" : "Nope";
     }
+
+}
+
+class User {
+
+    String firstName;
+    String lastName;
+    String country;
+    String state;
+    String email;
+    String password;
+    String repeatPassword;
+
+    public User(String firstName, String lastName, String country,
+                String state, String email, String password,
+                String repeatPassword) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.country = country;
+        this.state = state;
+        this.email = email;
+        this.password = password;
+        this.repeatPassword = repeatPassword;
+    }
+
+    @Override
+    public String toString(){
+        return this.email.toLowerCase();
+    }
+
+}
+
+class Login {
+    static boolean verifiUsername(String username) { return "teste@123.com".equals(username); }
+    static boolean verifiPassword(String password) { return "teste123".equals(password); }
 }
 
 public class StepDefinitions {
@@ -22,11 +60,17 @@ public class StepDefinitions {
 
     private String today;
 
+    private List<User> usuarios;
+
     private String actualAnswer;
 
     private Throwable throwable;
 
     private String operator;
+
+    static String username;
+
+    static String password;
 
     private Boolean formFill;
 
@@ -298,17 +342,33 @@ public class StepDefinitions {
     }
 
     @Given("Minha infos são:")
-    public void minha_infos_são(io.cucumber.datatable.DataTable dataTable) {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        // For automatic transformation, change DataTable to one of
-        // E, List<E>, List<List<E>>, List<Map<K,V>>, Map<K,V> or
-        // Map<K, List<V>>. E,K,V must be a String, Integer, Float,
-        // Double, Byte, Short, Long, BigInteger or BigDecimal.
-        //
-        // For other transformations you can register a DataTableType.
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
+    public void minha_infos_são(String fN, String lN, String country,
+                                String state, String email, String pass,
+                                String rPass) {
+        int index = -1;
+        User userDaniel = new User(fN, lN, country, state, email, pass, rPass);
+        if(this.usuarios == null)
+            this.usuarios = new ArrayList<>();
+
+        this.usuarios.add(userDaniel);
+        index = usuarios.size() -1;
+
+        User fetchedUser = usuarios.get(index);
+
+       /* TODO Plugin do selenium deve tentar recuperar o máximo de informações
+        * possivel do multibags.
+        */
+
+        /* TODO Criar um assertEquals para cara informacao recuperada
+         * ex: asserEquals("teste_t@123.com", fetchedUser.email)
+         * firstName = Teste
+         * lastName = Daniel
+         * country = Brazil
+         * state = AAA
+         * email = teste_t@123.com
+         * password = teste123
+         * rPassword = teste123 (optional)
+         */
     }
 
     @When("aperto botão {string}")
@@ -472,8 +532,16 @@ public class StepDefinitions {
         System.out.println("throw new io.cucumber.java.PendingException();");
     }
 
-    @Então("a aplicacao deve receber uma mensagem de credenciais invalidas")
-    public void a_aplicacao_deve_receber_uma_mensagem_de_credenciais_invalidas() {
+    @Então("a aplicacao deve exibir uma mensagem de credenciais invalidas")
+    public void aAplicacaoDeveExibirUmaMensagemDeCredenciaisInvalidas() {
+        // Write code here that turns the phrase above into concrete actions
+        // TODO
+        System.out.println("Write code here that turns the phrase above into concrete actions");
+        System.out.println("throw new io.cucumber.java.PendingException();");
+    }
+
+    @E("o valor do {string} deve ser invalido")
+    public void oValorDoDeveSerInvalido(String arg0) {
         // Write code here that turns the phrase above into concrete actions
         // TODO
         System.out.println("Write code here that turns the phrase above into concrete actions");
@@ -493,6 +561,10 @@ public class StepDefinitions {
         // TODO
         System.out.println("Write code here that turns the phrase above into concrete actions");
         System.out.println("throw new io.cucumber.java.PendingException();");
+    }
+
+    @E("o {string} deve ser logado")
+    public void oDeveSerLogado(String arg0) {
     }
 
 }

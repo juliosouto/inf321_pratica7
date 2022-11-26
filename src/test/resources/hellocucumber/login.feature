@@ -4,16 +4,16 @@
 @Login
 Funcionalidade: Realizar Login
   Como usuário cadastrado na aplicação
-  "João" deseja realizar o login
+  "Daniel" deseja realizar o login
   Para que ele acesse sua conta
 
   Contexto:
-    Dado que "João" está cadastrado na aplicação
+    Dado que "Daniel" está cadastrado na aplicação
     E que ele acessou o caminho My Account -> Sign In
 
   @invalid @fast @priority:high
   Esquema do Cenário:
-    Quando João tenta logar com "<username>" e com "<password>"
+    Quando Daniel tenta logar com "<username>" e com "<password>"
     Então a aplicacao deve exibir uma mensagem de credenciais invalidas
     E o valor do "<resultado>" deve ser invalido
 
@@ -31,4 +31,4 @@ Funcionalidade: Realizar Login
     @valid-credential
     Exemplos:
       | username          | password     |  primeiroNome  | resultado |
-      | teste@123.com     | teste123     |  Teste         | logado    |
+      | teste_t@123.com   | teste123     |  Teste         | logado    |

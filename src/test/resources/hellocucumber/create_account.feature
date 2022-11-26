@@ -3,7 +3,7 @@
 Feature: Cadastro de nova conta
   Como usuário
   "Pedro" deseja cadastrar uma nova conta
-  Para que "Pedro" possa efetuar comprar no site
+  Para que "Pedro" possa efetuar compras no site e recebê-las no endereço cdastrado
 
   Background:
     Given Dado que "Pedro" acessou o site da multibags e entrou em Register
@@ -22,7 +22,7 @@ Feature: Cadastro de nova conta
     When digito as infos, sem precionar o botao "create account"
     Then deve ser gerada a msg <mensagem>
 
-    Examples: # essas msgs aparecem sem precisar precionar o create account
+    Examples: # essas msgs aparecem sem precisar pressionar o create account
       | First name | Last name | Country | State | Email             | Password | Repeat password | mensagem                              |
       |            | sobrenome | Brazil  | sp    | email@bol.com     | dadada   | dadada          | First name is required                |
       | nome       |           | Brazil  | sp    | email@bol.com     | dadada   | dadada          | Last name is required                 |
@@ -58,7 +58,7 @@ Feature: Cadastro de nova conta
   Scenario: Todas infos validas
     Given Minha infos são:
       | First name | Last name | Country | State | Email            | Password | Repeat password |
-      | nome       | sobrenome | Brazil  | sp    | email@bol.com.br | dadada   | dadada          |
+      | Teste      | Daniel    | Brazil  | AAA   | teste_t@123.com  | teste123 | teste123        |
     When aperto botão "Create an account"
     Then devo ser redirecionado para "minha conta"
 
