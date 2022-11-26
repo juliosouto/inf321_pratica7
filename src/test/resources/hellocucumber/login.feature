@@ -14,19 +14,21 @@ Funcionalidade: Realizar Login
   @invalid @fast @priority:high
   Esquema do Cenário:
     Quando João tenta logar com "<username>" e com "<password>"
-    Então a aplicacao deve receber uma mensagem de credenciais invalidas
+    Então a aplicacao deve exibir uma mensagem de credenciais invalidas
+    E o valor do "<resultado>" deve ser invalido
 
     @invalid-credentials
     Exemplos:
-      | username       | password    |
-      | Joao@teste.com | teste123    |
-      | teste@123.com  | senhaErrada |
+      | username        | password     |  resultado |
+      | Joao@teste.com  | teste123     |  invalido  |
+      | teste@123.com   | senhaErrada  |  invalido  |
 
   Esquema do Cenário: Realizar login de usuário cadastrado
     Quando Joao digitar corretamente as credenciais "<username>" e "<password>":
     Então a aplicação deve exibir corretamente o "<primeiroNome>" e carrinho conforme ultimo estado
+    E o "<resultado>" deve ser logado
 
     @valid-credential
     Exemplos:
-      | username      | password | primeiroNome |
-      | teste@123.com | teste123 | Teste        |
+      | username          | password     |  primeiroNome  | resultado |
+      | teste@123.com     | teste123     |  Teste         | logado    |
