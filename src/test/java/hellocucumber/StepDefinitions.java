@@ -9,6 +9,8 @@ import io.cucumber.java.pt.Então;
 import io.cucumber.java.pt.Quando;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class IsItFriday {
     static String isItFriday(String today) {
@@ -19,6 +21,7 @@ class IsItFriday {
 public class StepDefinitions {
 
     private String senhaConfirmacao;
+    private String senha;
 
     private String today;
 
@@ -57,7 +60,10 @@ public class StepDefinitions {
         assertEquals(expectedAnswer, actualAnswer);
     }
 
-    /*** Código da documentação acima: https://cucumber.io/docs/guides/10-minute-tutorial/?lang=java **********/
+    /***
+     * Código da documentação acima:
+     * https://cucumber.io/docs/guides/10-minute-tutorial/?lang=java
+     **********/
 
     @Given("Dado que {string} acessou o site da multibags e entrou em Register")
     public void dado_que_acessou_o_site_da_multibags_e_entrou_em_register(String string) {
@@ -76,7 +82,8 @@ public class StepDefinitions {
     }
 
     @Quando("é inserido {string} com {string} com {string} com {string} com {string} com {string} com {string}")
-    public void é_inserido_com_com_com_com_com_com(String string, String string2, String string3, String string4, String string5, String string6, String string7) {
+    public void é_inserido_com_com_com_com_com_com(String string, String string2, String string3, String string4,
+            String string5, String string6, String string7) {
         // Write code here that turns the phrase above into concrete actions
         // TODO
         System.out.println("Write code here that turns the phrase above into concrete actions");
@@ -109,34 +116,17 @@ public class StepDefinitions {
 
     @Dado("que {string} possui uma conta com senha fraca.")
     public void que_possui_uma_conta_com_senha_fraca(String string) {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
+        System.out.println("name =" + string);
     }
 
     @Dado("que as duas senhas não batem")
     public void que_as_duas_senhas_não_batem() {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
-    }
-
-    @Quando("a senha nova não bate com a confirmação")
-    public void a_senha_nova_não_bate_com_a_confirmação() {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
+        System.out.println("senhas diferentes");
     }
 
     @Então("Devo receber mensagem de erro {string}")
     public void devo_receber_mensagem_de_erro(String string) {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
+        System.out.println(string);
     }
 
     @Given("Estou em http:\\/\\/multibags.1dt.com.br\\/shop\\/customer\\/registration.html")
@@ -237,14 +227,6 @@ public class StepDefinitions {
 
     @Dado("a senha nova não é escrita")
     public void a_senha_nova_não_é_escrita() {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
-    }
-
-    @Quando("a senha nova for vazia")
-    public void a_senha_nova_for_vazia() {
         // Write code here that turns the phrase above into concrete actions
         // TODO
         System.out.println("Write code here that turns the phrase above into concrete actions");
@@ -423,29 +405,34 @@ public class StepDefinitions {
 
     @E("senha de confirmação {string} batem")
     public void senha_confirmacao_bate(String string) {
-        this.formFill = true;
         this.senhaConfirmacao = string;
+        assertEquals(this.senha, this.senhaConfirmacao);
     }
 
     @E("senha de confirmação {string} não batem")
     public void senha_confirmacao_nao_bate(String string) {
-        this.formFill = true;
         this.senhaConfirmacao = string;
+        assertNotEquals(this.senha, this.senhaConfirmacao);
     }
 
     @Quando("a {string} menor que 8 caracteres")
     public void senha_menor_oito(String string) {
-        System.out.println("resultado = " + string + " " + this.senhaConfirmacao);
+        System.out.println("resultado = " + string + " menor 8");
+        this.senha = string;
+        assertTrue(string.length() < 8);
     }
 
     @Quando("a {string} nova for vazia")
     public void senha_e_vazia(String string) {
-        System.out.println("resultado = " + string + " " + this.senhaConfirmacao);
+        System.out.println("resultado = " + string);
+        assertTrue(string.isBlank());
     }
 
     @Quando("a {string} nova não bate com a confirmação")
     public void senha_nao_bate_confirmacao(String string) {
-        System.out.println("resultado = " + string + " " + this.senhaConfirmacao);
+        System.out.println("resultado = " + string + " - " + this.senhaConfirmacao);
+        this.senha = string;
+        assertNotEquals(this.senha, this.senhaConfirmacao);
     }
 
     @Dado("que {string} está cadastrado na aplicação")
@@ -487,6 +474,7 @@ public class StepDefinitions {
         System.out.println("Write code here that turns the phrase above into concrete actions");
         System.out.println("throw new io.cucumber.java.PendingException();");
     }
+
     @Então("a aplicação deve exibir corretamente o {string} e carrinho conforme ultimo estado")
     public void a_aplicação_deve_exibir_corretamente_o_e_carrinho_conforme_ultimo_estado(String string) {
         // Write code here that turns the phrase above into concrete actions
@@ -495,4 +483,19 @@ public class StepDefinitions {
         System.out.println("throw new io.cucumber.java.PendingException();");
     }
 
+    @Então("a aplicacao deve exibir uma mensagem de credenciais invalidas")
+    public void a_aplicacao_deve_exibir_uma_mensagem_de_credenciais_invalidas() {
+        System.out.println("as credenciais passadas são inválidas");
+    }
+
+    @Então("o valor do {string} deve ser invalido")
+    public void o_valor_do_deve_ser_invalido(String string) {
+        System.out.println(string);
+    }
+
+    @Então("o {string} deve ser logado")
+    public void o_deve_ser_logado(String string) {
+        // Write code here that turns the phrase above into concrete actions
+        System.out.println(string);
+    }
 }
