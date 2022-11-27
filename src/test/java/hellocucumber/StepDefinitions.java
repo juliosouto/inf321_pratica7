@@ -320,34 +320,50 @@ public class StepDefinitions {
         System.out.println("throw new io.cucumber.java.PendingException();");
     }
 
+//    @Given("Minha infos são:")
+//    public void minha_infos_são(String step) {
+//        // TODO
+//        System.out.println("Write code here that turns the phrase above into concrete actions");
+//        System.out.println("throw new io.cucumber.java.PendingException();");
+////        int index = -1;
+////        User userDaniel = new User(fN, lN, country, state, email, pass, rPass);
+////        if(this.usuarios == null)
+////            this.usuarios = new ArrayList<>();
+////
+////        this.usuarios.add(userDaniel);
+////        index = usuarios.size() -1;
+////
+////        User fetchedUser = usuarios.get(index);
+//
+//       /* TODO Plugin do selenium deve tentar recuperar o máximo de informações
+//        * possivel do multibags.
+//        */
+//
+//        /* TODO Criar um assertEquals para cara informacao recuperada
+//         * ex: asserEquals("teste_t@123.com", fetchedUser.email)
+//         * firstName = Teste
+//         * lastName = Daniel
+//         * country = Brazil
+//         * state = AAA
+//         * email = teste_t@123.com
+//         * password = teste123
+//         * rPassword = teste123 (optional)
+//         */
+//    }
+
     @Given("Minha infos são:")
-    public void minha_infos_são(String fN, String lN, String country,
-                                String state, String email, String pass,
-                                String rPass) {
-        int index = -1;
-        User userDaniel = new User(fN, lN, country, state, email, pass, rPass);
-        if(this.usuarios == null)
-            this.usuarios = new ArrayList<>();
-
-        this.usuarios.add(userDaniel);
-        index = usuarios.size() -1;
-
-        User fetchedUser = usuarios.get(index);
-
-       /* TODO Plugin do selenium deve tentar recuperar o máximo de informações
-        * possivel do multibags.
-        */
-
-        /* TODO Criar um assertEquals para cara informacao recuperada
-         * ex: asserEquals("teste_t@123.com", fetchedUser.email)
-         * firstName = Teste
-         * lastName = Daniel
-         * country = Brazil
-         * state = AAA
-         * email = teste_t@123.com
-         * password = teste123
-         * rPassword = teste123 (optional)
-         */
+    public void minha_infos_são(io.cucumber.datatable.DataTable dataTable) {
+        // Write code here that turns the phrase above into concrete actions
+        // For automatic transformation, change DataTable to one of
+        // E, List<E>, List<List<E>>, List<Map<K,V>>, Map<K,V> or
+        // Map<K, List<V>>. E,K,V must be a String, Integer, Float,
+        // Double, Byte, Short, Long, BigInteger or BigDecimal.
+        //
+        // For other transformations you can register a DataTableType.
+        // Write code here that turns the phrase above into concrete actions
+        // TODO
+        System.out.println("Write code here that turns the phrase above into concrete actions");
+        System.out.println("throw new io.cucumber.java.PendingException();");
     }
 
     @When("aperto botão {string}")
@@ -550,6 +566,18 @@ public class StepDefinitions {
 
     @E("o {string} deve ser logado")
     public void oDeveSerLogado(String arg0) {
+        // Write code here that turns the phrase above into concrete actions
+        // TODO
+        System.out.println("Write code here that turns the phrase above into concrete actions");
+        System.out.println("throw new io.cucumber.java.PendingException();");
+    }
+
+    @Quando("Daniel tenta logar com {string} e com {string}")
+    public void daniel_tenta_logar_com_e_com(String string, String string2) {
+        // Write code here that turns the phrase above into concrete actions
+        // TODO
+        System.out.println("Write code here that turns the phrase above into concrete actions");
+        System.out.println("throw new io.cucumber.java.PendingException();");
     }
 
 }
