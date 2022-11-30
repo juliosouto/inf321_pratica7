@@ -43,15 +43,20 @@ class User {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return this.email.toLowerCase();
     }
 
 }
 
 class Login {
-    static boolean verifiUsername(String username) { return "teste@123.com".equals(username); }
-    static boolean verifiPassword(String password) { return "teste123".equals(password); }
+    static boolean verifiUsername(String username) {
+        return "teste@123.com".equals(username);
+    }
+
+    static boolean verifiPassword(String password) {
+        return "teste123".equals(password);
+    }
 }
 
 public class StepDefinitions {
@@ -124,7 +129,7 @@ public class StepDefinitions {
 
     @Quando("é inserido {string} com {string} com {string} com {string} com {string} com {string} com {string}")
     public void é_inserido_com_com_com_com_com_com(String string, String string2, String string3, String string4,
-            String string5, String string6, String string7) {
+                                                   String string5, String string6, String string7) {
         // Write code here that turns the phrase above into concrete actions
         // TODO
         System.out.println("Write code here that turns the phrase above into concrete actions");
