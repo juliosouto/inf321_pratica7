@@ -7,8 +7,14 @@ import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.E;
 import io.cucumber.java.pt.Então;
 import io.cucumber.java.pt.Quando;
+import org.openqa.selenium.WebDriver;
+import io.cucumber.java.After;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -61,8 +67,6 @@ class Login {
 
 public class StepDefinitions {
 
-    private String senhaConfirmacao;
-
     private String today;
 
     private List<User> usuarios;
@@ -75,9 +79,148 @@ public class StepDefinitions {
 
     private String username;
 
+    private Boolean formFill;
+
+    //region Selenium
+    private final WebDriver driverFirefox = new FirefoxDriver();
+    //private final WebDriver driverChrome = new ChromeDriver();
+    //endregion
+
+
+    //region Selenium Alterar Senha
+    private String senhaConfirmacao;
+    private final String resetSenha = "123456";
     private String password;
 
-    private Boolean formFill;
+    private void reseta_senha() {
+        try {
+            driverFirefox.get("http://multibags.1dt.com.br/shop/customer/password.html");
+            Thread.sleep(5000);
+            WebElement currentPassword = driverFirefox.findElement(By.xpath("//*[@id=\"currentPassword\"]"));
+            currentPassword.sendKeys(this.password);
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void set_senha_atual() {
+        try {
+            WebElement currentPassword = driverFirefox.findElement(By.xpath("//*[@id=\"currentPassword\"]"));
+            currentPassword.sendKeys(this.resetSenha);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @Então("Devo receber mensagem de erro {string}")
+    public void devo_receber_mensagem_de_erro(String string) {
+        System.out.println(string);
+        WebElement notifyError = driverFirefox.findElement(By.xpath("//*[@id=\"formError\"]"));
+
+        assertEquals(string, notifyError.getText());
+    }
+
+    private void entra_troca_senha_tela() {
+        try {
+            driverFirefox.get("http://multibags.1dt.com.br/shop/customer/customLogon.html");
+            Thread.sleep(2000);
+            WebElement login = driverFirefox.findElement(By.name("signin_userName"));
+            WebElement senha = driverFirefox.findElement(By.name("signin_password"));
+            WebElement signBtn = driverFirefox.findElement(By.id("genericLogin-button"));
+            login.sendKeys("test@test");
+            senha.sendKeys("123456");
+            signBtn.click();
+            Thread.sleep(2000);
+            WebElement changePassword = driverFirefox.findElement(
+                    By.xpath("/html/body/div[3]/div/div/div[1]/div/ul/li[3]/a"));
+            changePassword.click();
+            Thread.sleep(2000);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @Dado("senha é escrita")
+    public void senha_é_escrita() {
+        entra_troca_senha_tela();
+    }
+
+    @Quando("a {string} menor que 6 caracteres")
+    public void senha_menor_oito(String string) {
+        System.out.println("resultado = " + string + " menor 6");
+        this.password = string;
+        assertTrue(string.length() < 6);
+
+        WebElement currentPass = driverFirefox.findElement(By.xpath("//*[@id=\"currentPassword\"]"));
+        WebElement newPass = driverFirefox.findElement(By.xpath("//*[@id=\"password\"]"));
+        currentPass.sendKeys("12345");
+        newPass.sendKeys(this.password);
+    }
+
+    @E("senha de confirmação {string} batem")
+    public void senha_confirmacao_bate(String string) {
+        this.senhaConfirmacao = string;
+        assertEquals(this.password, this.senhaConfirmacao);
+        WebElement confirmPass = driverFirefox.findElement(By.xpath("//*[@id=\"checkPassword\"]"));
+        confirmPass.sendKeys(this.senhaConfirmacao);
+    }
+
+    @Dado("a senha nova não é escrita")
+    public void a_senha_nova_não_é_escrita() {
+        entra_troca_senha_tela();
+    }
+
+    @Quando("a {string} nova for vazia")
+    public void senha_e_vazia(String string) {
+        try {
+            System.out.println("resultado = " + string);
+            assertTrue(string.isEmpty());
+
+            WebElement currentPass = driverFirefox.findElement(By.xpath("//*[@id=\"currentPassword\"]"));
+            currentPass.sendKeys("123456");
+            WebElement newPass = driverFirefox.findElement(By.xpath("//*[@id=\"password\"]"));
+            newPass.sendKeys("");
+            Thread.sleep(1000);
+            WebElement confirmPass = driverFirefox.findElement(By.xpath("//*[@id=\"checkPassword\"]"));
+            confirmPass.sendKeys(string);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @Quando("a {string} nova não bate com a confirmação")
+    public void senha_nao_bate_confirmacao(String string) {
+        System.out.println("resultado = " + string + " - " + this.senhaConfirmacao);
+        this.password = string;
+        this.senhaConfirmacao = "";
+        assertNotEquals(this.password, this.senhaConfirmacao);
+
+        set_senha_atual();
+        WebElement newPass = driverFirefox.findElement(By.xpath("//*[@id=\"password\"]"));
+        newPass.sendKeys(string);
+    }
+
+    @Dado("que as duas senhas não batem")
+    public void que_as_duas_senhas_não_batem() {
+        System.out.println("senhas diferentes");
+        entra_troca_senha_tela();
+    }
+
+    @E("senha de confirmação {string} não batem")
+    public void senha_confirmacao_nao_bate(String string) {
+        this.senhaConfirmacao = string;
+        assertNotEquals(this.password, this.senhaConfirmacao);
+
+        WebElement confirmPass = driverFirefox.findElement(By.xpath("//*[@id=\"checkPassword\"]"));
+        confirmPass.sendKeys(string);
+    }
+
+    @After()
+    public void closeBrowser() {
+        driverFirefox.quit();
+    }
+    //endregion
 
     @Given("an example scenario")
     public void anExampleScenario() {
@@ -165,16 +308,6 @@ public class StepDefinitions {
         System.out.println("name =" + string);
     }
 
-    @Dado("que as duas senhas não batem")
-    public void que_as_duas_senhas_não_batem() {
-        System.out.println("senhas diferentes");
-    }
-
-    @Então("Devo receber mensagem de erro {string}")
-    public void devo_receber_mensagem_de_erro(String string) {
-        System.out.println(string);
-    }
-
     @Given("Estou em http:\\/\\/multibags.1dt.com.br\\/shop\\/customer\\/registration.html")
     public void estou_em_http_multibags_1dt_com_br_shop_customer_registration_html() {
         // Write code here that turns the phrase above into concrete actions
@@ -255,28 +388,9 @@ public class StepDefinitions {
         System.out.println("throw new io.cucumber.java.PendingException();");
     }
 
-    @Dado("senha é escrita")
-    public void senha_é_escrita() {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
-    }
 
     @Quando("a senha menor que {int} caracteres")
     public void a_senha_menor_que_caracteres(Integer int1) {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
-    }
-
-    @Dado("a senha nova não é escrita")
-    public void a_senha_nova_não_é_escrita() {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
     }
 
     @Dado("quando a senha atual é vazia")
@@ -481,38 +595,6 @@ public class StepDefinitions {
         System.out.println("throw new io.cucumber.java.PendingException();");
     }
 
-    @E("senha de confirmação {string} batem")
-    public void senha_confirmacao_bate(String string) {
-        this.senhaConfirmacao = string;
-        assertEquals(this.password, this.senhaConfirmacao);
-    }
-
-    @E("senha de confirmação {string} não batem")
-    public void senha_confirmacao_nao_bate(String string) {
-        this.senhaConfirmacao = string;
-        assertNotEquals(this.password, this.senhaConfirmacao);
-    }
-
-    @Quando("a {string} menor que 8 caracteres")
-    public void senha_menor_oito(String string) {
-        System.out.println("resultado = " + string + " menor 8");
-        this.password = string;
-        assertTrue(string.length() < 8);
-    }
-
-    @Quando("a {string} nova for vazia")
-    public void senha_e_vazia(String string) {
-        System.out.println("resultado = " + string);
-        assertTrue(string.isEmpty());
-    }
-
-    @Quando("a {string} nova não bate com a confirmação")
-    public void senha_nao_bate_confirmacao(String string) {
-        System.out.println("resultado = " + string + " - " + this.senhaConfirmacao);
-        this.password = string;
-        assertNotEquals(this.password, this.senhaConfirmacao);
-    }
-
     @Dado("que {string} está cadastrado na aplicação")
     public void que_está_cadastrado_na_aplicação(String string) {
         // Write code here that turns the phrase above into concrete actions
@@ -584,5 +666,4 @@ public class StepDefinitions {
         System.out.println("Write code here that turns the phrase above into concrete actions");
         System.out.println("throw new io.cucumber.java.PendingException();");
     }
-
 }
