@@ -323,13 +323,12 @@ public class StepDefinitions {
             Random rand = new Random();
             int randnum = rand.nextInt(1000000);
             email_final = email_prefix + Integer.toString(randnum) + email_domain;
-            System.out.println(arg4);
-            System.out.println(email_final);
-            System.out.println("------------------");
-            Thread.sleep(reactTime_ms);
         }
         else if(arg4.equals("blank")){
             email_final = "";
+        }
+        else if(arg4.equals("fixed")){
+            email_final = "email@bol.com.br";
         }
         else{
             email_final = "email_invalido";
@@ -355,8 +354,20 @@ public class StepDefinitions {
         System.out.println(msgs_erro_obtida);
         System.out.println("\n\nesperado: "+ arg0);
         System.out.println("-------------------------------------------------");
-        Thread.sleep(4*reactTime_ms); // tirar depois, to usando somente pra depurrar
+        Thread.sleep(4*reactTime_ms); // TODO tirar depois, to usando somente pra depurrar
         assertEquals(msgs_erro_obtida, arg0);
+    }
+
+    @Then("o form de cadastro deve me redirecionar para {string}")
+    public void oFormDeCadastroDeveMeRedirecionarPara(String arg0) throws InterruptedException {
+        String urlexpected = "http://multibags.1dt.com.br/shop/customer/dashboard";
+        String currentUrl = driverFirefox.getCurrentUrl();
+        System.out.println(currentUrl);
+        String urlTrimmed = currentUrl.split(".html")[0];
+        System.out.println(urlTrimmed);
+        System.out.println("-------------------------------------------------");
+        Thread.sleep(4*reactTime_ms); // TODO tirar depois, to usando somente pra depurrar
+        assertEquals(urlTrimmed, urlexpected);
     }
 
     @Dado("que {string} possui uma conta com senha fraca.")

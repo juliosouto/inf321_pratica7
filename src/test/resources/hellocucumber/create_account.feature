@@ -27,15 +27,19 @@ Feature: Cadastro de nova conta
 
 
   @sucesso
-  Scenario: Todas infos validas
-    Given Minha infos são:
-      | First name | Last name | Country | State | Email            | Password | Repeat password |
-      | Teste      | Daniel    | Brazil  | AAA   | teste_t@123.com  | teste123 | teste123        |
-    When aperto botão "Create an account"
-    Then devo ser redirecionado para "minha conta"
+  Scenario Outline: Todas infos invalidas ao submeter cadastro
+    Given Preenchi o form de cadastro com "<FirstName>", "<Lastname>", "<Country>", "<State>", "<Email>", "<Password>" e "<Repeatpassword>"
+    When submeto as infos de cadastro, pressionando o botao "create account"
+    Then o form de cadastro deve me redirecionar para "minha conta"
+    Examples:
+      | FirstName  | Lastname  | Country | State | Email         | Password | Repeatpassword  |
+      | pedro      | bial      | Brazil  | rj    | email_valido  | dadada   | dadada          |
 
   @falha
-  Scenario: Email previamente cadastrado
-    Given usuario ja esta previamente criado
+  Scenario Outline: Email previamente cadastrado
+    Given Preenchi o form de cadastro com "<FirstName>", "<Lastname>", "<Country>", "<State>", "<Email>", "<Password>" e "<Repeatpassword>"
     When submeto as infos de cadastro, pressionando o botao "create account"
-    Then o form de cadastro deve ser gerar a msg "User with user name already exists for this store"
+    Then o form de cadastro deve ser gerar a msg "<mensagem>"
+    Examples:
+      | FirstName  | Lastname  | Country | State | Email         | Password | Repeatpassword  | mensagem                                           |
+      | nome       | sobrenome | Brazil  | sp    | fixed         | dadada   | dadada          | User with user name already exists for this store. |
