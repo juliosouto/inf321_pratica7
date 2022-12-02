@@ -14,14 +14,16 @@ Feature: Cadastro de nova conta
     Given Preenchi o form de cadastro com "<FirstName>", "<Lastname>", "<Country>", "<State>", "<Email>", "<Password>" e "<Repeatpassword>"
     When submeto as infos de cadastro, pressionando o botao "create account"
     Then o form de cadastro deve ser gerar a msg "<mensagem>"
-    # obs o email eh tratado depois, estou fazendo assim pra gerar um email unico cada vez, pra nao dar o erro de que a conta ja existe
+    # obs o email eh tratado depois, esta assim pra gerar um email unico cada vez, pra nao dar o erro de que a conta ja existe
     Examples:
-      | FirstName  | Lastname  | Country | State | Email         | Password | Repeatpassword  | mensagem                                        |
-      | nome       | sobrenome | Brazil  | sp    | email_valido  | dadada   | dada            | password.notequal\nBoth password must match     |
-      |            | sobrenome | Brazil  | sp    | email_valido  | dadada   | dadada          | Field required                                  |
-      | nome       |           | Brazil  | sp    | email_valido  | dadada   | dadada          | Field required                                  |
-      | nome       | sobrenome | Brazil  | sp    | email_valido  |          | dadada          | User name is required Email address is required |
-      | nome       | sobrenome | Brazil  | sp    | email_valido  | dadada   |                 | password.notequal                               |
+      | FirstName  | Lastname  | Country | State | Email         | Password | Repeatpassword  | mensagem                                             |
+      | nome       | sobrenome | Brazil  | sp    | email_valido  | dadada   | dada            | password.notequal\nBoth password must match          |
+      |            | sobrenome | Brazil  | sp    | email_valido  | dadada   | dadada          | Field required                                       |
+      | nome       |           | Brazil  | sp    | email_valido  | dadada   | dadada          | Field required                                       |
+      | nome       | sobrenome | Brazil  | sp    | email_valido  |          | dadada          | password.notequal\n{registration.password.not.empty} |
+      | nome       | sobrenome | Brazil  | sp    | blank         | dadada   | dadada          | Email address is required\nUser name is required     |
+      | nome       | sobrenome | Brazil  | sp    | not_valid     | dadada   | dadada          | Email address is invalid                             |
+      | nome       | sobrenome | Brazil  | sp    | email_valido  | dadada   |                 | password.notequal                                    |
 
 
   @sucesso

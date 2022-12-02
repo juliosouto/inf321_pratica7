@@ -328,6 +328,9 @@ public class StepDefinitions {
             System.out.println("------------------");
             Thread.sleep(reactTime_ms);
         }
+        else if(arg4.equals("blank")){
+            email_final = "";
+        }
         else{
             email_final = "email_invalido";
         }
