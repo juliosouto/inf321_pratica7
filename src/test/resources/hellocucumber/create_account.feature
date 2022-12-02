@@ -27,7 +27,7 @@ Feature: Cadastro de nova conta
 
 
   @sucesso
-  Scenario Outline: Todas infos invalidas ao submeter cadastro
+  Scenario Outline: Todas infos validas ao submeter cadastro
     Given Preenchi o form de cadastro com "<FirstName>", "<Lastname>", "<Country>", "<State>", "<Email>", "<Password>" e "<Repeatpassword>"
     When submeto as infos de cadastro, pressionando o botao "create account"
     Then o form de cadastro deve me redirecionar para "minha conta"
