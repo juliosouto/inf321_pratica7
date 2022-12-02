@@ -16,6 +16,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.Select;
 
 import java.util.List;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -84,6 +85,8 @@ public class StepDefinitions {
     //region Selenium
     private final WebDriver driverFirefox = new FirefoxDriver();
     //private final WebDriver driverChrome = new ChromeDriver();
+    int pageLoadTime_ms = 5000;
+    int reactTime_ms = 2000;
     //endregion
 
 
@@ -291,53 +294,66 @@ public class StepDefinitions {
      **********/
 
     @Given("Dado que {string} acessou o site da multibags e entrou em Register")
-    public void dado_que_acessou_o_site_da_multibags_e_entrou_em_register(String string) {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
+    public void inicio_register(String string) {
+        try {
+            driverFirefox.get("http://multibags.1dt.com.br/shop/customer/registration.html");
+            Thread.sleep(pageLoadTime_ms);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
-    @Dado("preencheu o formulário para realizar o cadastrado")
-    public void preencheu_o_formulário_para_realizar_o_cadastrado() {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
-        registra_conta();
+    @Given("Preenchi o form de cadastro com {string}, {string}, {string}, {string}, {string}, {string} e {string}")
+    public void preenchiOFormDeCadastroComE(String arg0, String arg1, String arg2, String arg3, String arg4, String arg5, String arg6) throws InterruptedException {
+        WebElement firstName = driverFirefox.findElement(By.name("billing.firstName"));
+        WebElement lastName = driverFirefox.findElement(By.name("billing.lastName"));
+        Select country = new Select(driverFirefox.findElement(By.name("billing.country")));
+        WebElement stateProvince = driverFirefox.findElement(By.name("billing.stateProvince"));
+        WebElement email = driverFirefox.findElement(By.name("emailAddress"));
+        WebElement password = driverFirefox.findElement(By.name("password"));
+        WebElement Repeapassword = driverFirefox.findElement(By.name("checkPassword"));
+        firstName.sendKeys(arg0);
+        lastName.sendKeys(arg1);
+        country.selectByVisibleText(arg2);
+        stateProvince.sendKeys(arg3);
+        String email_final;
+        if(arg4.equals("email_valido")){
+            String email_prefix = "email+";
+            String email_domain = "@bol.com.br";
+            Random rand = new Random();
+            int randnum = rand.nextInt(1000000);
+            email_final = email_prefix + Integer.toString(randnum) + email_domain;
+            System.out.println(arg4);
+            System.out.println(email_final);
+            System.out.println("------------------");
+            Thread.sleep(reactTime_ms);
+        }
+        else{
+            email_final = "email_invalido";
+        }
+        email.sendKeys(email_final);
+        password.sendKeys(arg5);
+        Repeapassword.sendKeys(arg6);
+        Thread.sleep(reactTime_ms);
     }
 
-    @Quando("é inserido {string} com {string} com {string} com {string} com {string} com {string} com {string}")
-    public void é_inserido_com_com_com_com_com_com(String string, String string2, String string3, String string4,
-                                                   String string5, String string6, String string7) {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
+    @When("submeto as infos de cadastro, pressionando o botao {string}")
+    public void submetoAsInfosDeCadastroPressionandoOBotao(String arg0) throws InterruptedException {
+        WebElement CreateBtn = driverFirefox.findElement(By.cssSelector(".btn.btn-default.login-btn"));
+        CreateBtn.click();
+        Thread.sleep(pageLoadTime_ms);
     }
 
-    @Então("O resultado será {string}")
-    public void o_resultado_será(String string) {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
-    }
-
-    @Então("A resposta será {string}")
-    public void a_resposta_será(String string) {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
-    }
-
-    @Dado("que {string} acessou o site da multibags e entrou em Register")
-    public void queAcessouOSiteDaMultibagsEEntrouEmRegister(final String name) {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
+    @Then("o form de cadastro deve ser gerar a msg {string}")
+    public void oFormDeCadastroDeveSerGerarAMsg(String arg0) throws InterruptedException {
+        WebElement errorMsgs = driverFirefox.findElement(By.id("customer.errors"));
+        System.out.println("msgs de errors: \n\n");
+        String msgs_erro_obtida = errorMsgs.getText();
+        System.out.println(msgs_erro_obtida);
+        System.out.println("\n\nesperado: "+ arg0);
+        System.out.println("-------------------------------------------------");
+        Thread.sleep(4*reactTime_ms); // tirar depois, to usando somente pra depurrar
+        assertEquals(msgs_erro_obtida, arg0);
     }
 
     @Dado("que {string} possui uma conta com senha fraca.")
@@ -345,136 +361,7 @@ public class StepDefinitions {
         System.out.println("name =" + string);
     }
 
-    @Given("Estou em http:\\/\\/multibags.1dt.com.br\\/shop\\/customer\\/registration.html")
-    public void estou_em_http_multibags_1dt_com_br_shop_customer_registration_html() {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
-    }
 
-    @Given("digitei nome no campo {string}")
-    public void digitei_nome_no_campo(String string) {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
-    }
-
-    @Given("digitei sobrenome no campo {string}")
-    public void digitei_sobrenome_no_campo(String string) {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
-    }
-
-    @Given("digitei Brazil no campo {string}")
-    public void digitei_brazil_no_campo(String string) {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
-    }
-
-    @Given("digitei sp no campo {string}")
-    public void digitei_sp_no_campo(String string) {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
-    }
-
-    @Given("digitei email@bol.com no campo {string}")
-    public void digitei_email_bol_com_no_campo(String string) {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
-    }
-
-    @Given("digitei dadada no campo {string}")
-    public void digitei_dadada_no_campo(String string) {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
-    }
-
-    @Given("digitei dada no campo {string}")
-    public void digitei_dada_no_campo(String string) {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
-    }
-
-    @When("preciono o botao {string}")
-    public void preciono_o_botao(String string) {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
-    }
-
-    @Then("deve ser gerada a msg password.notequal")
-    public void deve_ser_gerada_a_msg_password_notequal() {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
-    }
-
-
-    @Quando("a senha menor que {int} caracteres")
-    public void a_senha_menor_que_caracteres(Integer int1) {
-    }
-
-    @Dado("quando a senha atual é vazia")
-    public void quando_a_senha_atual_é_vazia() {
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
-    }
-
-    @Quando("a senha atual não for escrita")
-    public void a_senha_atual_não_for_escrita() {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
-    }
-
-    @Então("Devo recebe mensagem de erro {string}")
-    public void devo_recebe_mensagem_de_erro(String string) {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
-    }
-
-    @Given("digitei  no campo {string}")
-    public void digitei_no_campo(String string) {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
-    }
-
-    @Then("deve ser gerada a msg User name is required Email address is required")
-    public void deve_ser_gerada_a_msg_user_name_is_required_email_address_is_required() {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
-    }
-
-    @Then("deve ser gerada a msg Field required")
-    public void deve_ser_gerada_a_msg_field_required() {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
-    }
 
 //    @Given("Minha infos são:")
 //    public void minha_infos_são(String step) {
