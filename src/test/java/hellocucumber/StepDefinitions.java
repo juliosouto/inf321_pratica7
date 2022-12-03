@@ -106,6 +106,16 @@ public class StepDefinitions {
         }
     }
 
+    private void acessa_login() {
+        try {
+            driverFirefox.get("http://multibags.1dt.com.br/shop/customer/customLogon.html");
+
+            Thread.sleep(5000);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     private void set_senha_atual() {
         try {
             WebElement currentPassword = driverFirefox.findElement(By.xpath("//*[@id=\"currentPassword\"]"));
@@ -138,6 +148,42 @@ public class StepDefinitions {
                     By.xpath("/html/body/div[3]/div/div/div[1]/div/ul/li[3]/a"));
             changePassword.click();
             Thread.sleep(2000);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void registra_conta() {
+        try {
+            int pageLoadTime_ms = 5000;
+            int reactTime_ms = 2000;
+            driverFirefox.get("http://multibags.1dt.com.br/shop/customer/registration.html");
+            Thread.sleep(pageLoadTime_ms);
+            WebElement firstName = driverFirefox.findElement(By.name("billing.firstName"));
+            WebElement lastName = driverFirefox.findElement(By.name("billing.lastName"));
+            Select country = new Select(driverFirefox.findElement(By.name("billing.country")));
+            WebElement stateProvince = driverFirefox.findElement(By.name("billing.stateProvince"));
+            WebElement email = driverFirefox.findElement(By.name("emailAddress"));
+            WebElement password = driverFirefox.findElement(By.name("password"));
+            WebElement Repeapassword = driverFirefox.findElement(By.name("checkPassword"));
+            WebElement CreateBtn = driverFirefox.findElement(By.cssSelector(".btn.btn-default.login-btn"));
+            // preenche as infos
+            firstName.sendKeys("daniel");
+            lastName.sendKeys("sobrenome");
+            country.selectByVisibleText("Peru");
+            stateProvince.sendKeys("estado");
+            email.sendKeys("email_valido@example.com");
+            password.sendKeys("dadada");
+            Repeapassword.sendKeys("dada");
+            Thread.sleep(reactTime_ms);
+            // clicka em criar conta
+            CreateBtn.click();
+            Thread.sleep(pageLoadTime_ms);
+            WebElement errorMsgs = driverFirefox.findElement(By.id("customer.errors"));
+            System.out.println("msgs de errors: \n\n");
+            System.out.println(errorMsgs.getText());
+            System.out.println("-------------------------------------------------");
+            Thread.sleep(4*reactTime_ms); // tirar depois, to usando somente pra depurrar
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -536,49 +582,45 @@ public class StepDefinitions {
 
     @Então("a aplicacao deve exibir uma mensagem de credenciais invalidas")
     public void aAplicacaoDeveExibirUmaMensagemDeCredenciaisInvalidas() {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
+
     }
 
     @E("o valor do {string} deve ser invalido")
     public void oValorDoDeveSerInvalido(String arg0) {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
+        WebElement message = driverFirefox.findElement(By.xpath("/html/body/div[3]/div/div/div[1]/div[2]/div"));
+        assertEquals(arg0, message.getText());
+        driverFirefox.close();
     }
 
     @Quando("Joao digitar corretamente as credenciais {string} e {string}:")
     public void joao_digitar_corretamente_as_credenciais_e(String string, String string2) {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
+        WebElement login = driverFirefox.findElement(By.name("signin_userName"));
+        WebElement senha = driverFirefox.findElement(By.name("signin_password"));
+        WebElement signBtn = driverFirefox.findElement(By.id("genericLogin-button"));
+        login.sendKeys(string);
+        senha.sendKeys(string2);
+        signBtn.click();
     }
 
-    @Então("a aplicação deve exibir corretamente o {string} e carrinho conforme ultimo estado")
-    public void a_aplicação_deve_exibir_corretamente_o_e_carrinho_conforme_ultimo_estado(String string) {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
+    @Então("a aplicação deve exibir corretamente a tela de dashboard")
+    public void a_aplicação_deve_exibir_corretamente_a_tela_de_dashboard(String string) {
+        WebElement logoutElement = driverFirefox.findElement(By.xpath("/html/body/div[3]/div/div/div[1]/div/ul/li[4]/a"));
+        final String logoutText = " Logout";
+        assertEquals(logoutText, logoutElement.getText());
     }
 
     @E("o {string} deve ser logado")
     public void oDeveSerLogado(String arg0) {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
+        driverFirefox.close();
     }
 
     @Quando("Daniel tenta logar com {string} e com {string}")
     public void daniel_tenta_logar_com_e_com(String string, String string2) {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
+        WebElement login = driverFirefox.findElement(By.name("signin_userName"));
+        WebElement senha = driverFirefox.findElement(By.name("signin_password"));
+        WebElement signBtn = driverFirefox.findElement(By.id("genericLogin-button"));
+        login.sendKeys(string);
+        senha.sendKeys(string2);
+        signBtn.click();
     }
 }
