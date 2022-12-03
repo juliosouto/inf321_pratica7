@@ -15,8 +15,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.Select;
 
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -139,42 +138,6 @@ public class StepDefinitions {
                     By.xpath("/html/body/div[3]/div/div/div[1]/div/ul/li[3]/a"));
             changePassword.click();
             Thread.sleep(2000);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    private void registra_conta() {
-        try {
-            int pageLoadTime_ms = 5000;
-            int reactTime_ms = 2000;
-            driverFirefox.get("http://multibags.1dt.com.br/shop/customer/registration.html");
-            Thread.sleep(pageLoadTime_ms);
-            WebElement firstName = driverFirefox.findElement(By.name("billing.firstName"));
-            WebElement lastName = driverFirefox.findElement(By.name("billing.lastName"));
-            Select country = new Select(driverFirefox.findElement(By.name("billing.country")));
-            WebElement stateProvince = driverFirefox.findElement(By.name("billing.stateProvince"));
-            WebElement email = driverFirefox.findElement(By.name("emailAddress"));
-            WebElement password = driverFirefox.findElement(By.name("password"));
-            WebElement Repeapassword = driverFirefox.findElement(By.name("checkPassword"));
-            WebElement CreateBtn = driverFirefox.findElement(By.cssSelector(".btn.btn-default.login-btn"));
-            // preenche as infos
-            firstName.sendKeys("daniel");
-            lastName.sendKeys("sobrenome");
-            country.selectByVisibleText("Peru");
-            stateProvince.sendKeys("estado");
-            email.sendKeys("email_valido@example.com");
-            password.sendKeys("dadada");
-            Repeapassword.sendKeys("dada");
-            Thread.sleep(reactTime_ms);
-            // clicka em criar conta
-            CreateBtn.click();
-            Thread.sleep(pageLoadTime_ms);
-            WebElement errorMsgs = driverFirefox.findElement(By.id("customer.errors"));
-            System.out.println("msgs de errors: \n\n");
-            System.out.println(errorMsgs.getText());
-            System.out.println("-------------------------------------------------");
-            Thread.sleep(4*reactTime_ms); // tirar depois, to usando somente pra depurrar
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -303,6 +266,31 @@ public class StepDefinitions {
         }
     }
 
+    String trataEntEmail(String entEmail){
+        String email_final;
+        switch (entEmail){
+            case "email_valido":
+                // precisamos de um email valido,
+                // mas se a gente sempre usar o mesmo vai dar erro
+                // falando que a conta ja existe
+                String email_prefix = "email+";
+                String email_domain = "@bol.com.br";
+                Random rand = new Random();
+                int randnum = rand.nextInt(1000000);
+                email_final = email_prefix + Integer.toString(randnum) + email_domain;
+                break;
+            case "blank":
+                email_final = "";
+                break;
+            case "fixed":
+                email_final = "email@bol.com.br";
+                break;
+            default:
+                email_final = "email_invalido";
+        }
+        return email_final;
+    }
+
     @Given("Preenchi o form de cadastro com {string}, {string}, {string}, {string}, {string}, {string} e {string}")
     public void preenchiOFormDeCadastroComE(String arg0, String arg1, String arg2, String arg3, String arg4, String arg5, String arg6) throws InterruptedException {
         WebElement firstName = driverFirefox.findElement(By.name("billing.firstName"));
@@ -311,31 +299,15 @@ public class StepDefinitions {
         WebElement stateProvince = driverFirefox.findElement(By.name("billing.stateProvince"));
         WebElement email = driverFirefox.findElement(By.name("emailAddress"));
         WebElement password = driverFirefox.findElement(By.name("password"));
-        WebElement Repeapassword = driverFirefox.findElement(By.name("checkPassword"));
+        WebElement Repeatpassword = driverFirefox.findElement(By.name("checkPassword"));
         firstName.sendKeys(arg0);
         lastName.sendKeys(arg1);
         country.selectByVisibleText(arg2);
         stateProvince.sendKeys(arg3);
-        String email_final;
-        if(arg4.equals("email_valido")){
-            String email_prefix = "email+";
-            String email_domain = "@bol.com.br";
-            Random rand = new Random();
-            int randnum = rand.nextInt(1000000);
-            email_final = email_prefix + Integer.toString(randnum) + email_domain;
-        }
-        else if(arg4.equals("blank")){
-            email_final = "";
-        }
-        else if(arg4.equals("fixed")){
-            email_final = "email@bol.com.br";
-        }
-        else{
-            email_final = "email_invalido";
-        }
+        String email_final = trataEntEmail(arg4);
         email.sendKeys(email_final);
         password.sendKeys(arg5);
-        Repeapassword.sendKeys(arg6);
+        Repeatpassword.sendKeys(arg6);
         Thread.sleep(reactTime_ms);
     }
 
@@ -349,23 +321,28 @@ public class StepDefinitions {
     @Then("o form de cadastro deve ser gerar a msg {string}")
     public void oFormDeCadastroDeveSerGerarAMsg(String arg0) throws InterruptedException {
         WebElement errorMsgs = driverFirefox.findElement(By.id("customer.errors"));
-        System.out.println("msgs de errors: \n\n");
-        String msgs_erro_obtida = errorMsgs.getText();
-        System.out.println(msgs_erro_obtida);
-        System.out.println("\n\nesperado: "+ arg0);
-        System.out.println("-------------------------------------------------");
+        System.out.println("msgs de errors: \n\n");// TODO tirar depois, to usando somente pra depurrar
+        String msgs_erro_obtida = errorMsgs.getText();// TODO tirar depois, to usando somente pra depurrar
+        System.out.println(msgs_erro_obtida);// TODO tirar depois, to usando somente pra depurrar
+        System.out.println("\n\nesperado: "+ arg0);// TODO tirar depois, to usando somente pra depurrar
+        System.out.println("-------------------------------------------------"); // TODO tirar depois, to usando somente pra depurrar
         Thread.sleep(4*reactTime_ms); // TODO tirar depois, to usando somente pra depurrar
-        assertEquals(msgs_erro_obtida, arg0);
+        // quando temos mais que uma mensagem estamos usando o \n como separador
+        // porem, as vezes, o sistema multibags retorna as mensagens na ordem trocada
+        // por isso to colocando em um set e comparando o set pra ignorar a ordem
+        Set<String> expected_set = new HashSet<String>(Arrays.asList(arg0.split("\n")));
+        Set<String> result_set = new HashSet<String>(Arrays.asList(msgs_erro_obtida.split("\n")));
+        assertEquals(expected_set, result_set);
     }
 
     @Then("o form de cadastro deve me redirecionar para {string}")
     public void oFormDeCadastroDeveMeRedirecionarPara(String arg0) throws InterruptedException {
         String urlexpected = "http://multibags.1dt.com.br/shop/customer/dashboard";
         String currentUrl = driverFirefox.getCurrentUrl();
-        System.out.println(currentUrl);
-        String urlTrimmed = currentUrl.split(".html")[0];
-        System.out.println(urlTrimmed);
-        System.out.println("-------------------------------------------------");
+        System.out.println(currentUrl); // TODO tirar depois, to usando somente pra depurrar
+        String urlTrimmed = currentUrl.split(".html")[0]; // TODO tirar depois, to usando somente pra depurrar
+        System.out.println(urlTrimmed); // TODO tirar depois, to usando somente pra depurrar
+        System.out.println("-------------------------------------------------"); // TODO tirar depois, to usando somente pra depurrar
         Thread.sleep(4*reactTime_ms); // TODO tirar depois, to usando somente pra depurrar
         assertEquals(urlTrimmed, urlexpected);
     }
