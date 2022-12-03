@@ -7,7 +7,6 @@ Feature: Cadastro de nova conta
 
   Background:
     Given Dado que "Pedro" acessou o site da multibags e entrou em Register
-    # And preencheu o formulário para realizar o cadastrado
 
   @falha
   Scenario Outline: infos invalidas ao submeter cadastro
@@ -32,8 +31,8 @@ Feature: Cadastro de nova conta
     When submeto as infos de cadastro, pressionando o botao "create account"
     Then o form de cadastro deve me redirecionar para "minha conta"
     Examples:
-      | FirstName | Lastname | Country | State | Email        | Password | Repeatpassword |
-      | pedro     | bial     | Brazil  | rj    | email_valido | dadada   | dadada         |
+      | FirstName  | Lastname  | Country | State | Email         | Password | Repeatpassword  |
+      | pedro      | bial      | Brazil  | rj    | email_valido  | dadada   | dadada          |
 
   @falha
   Scenario Outline: Email previamente cadastrado
