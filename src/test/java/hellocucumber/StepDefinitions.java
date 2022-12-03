@@ -15,8 +15,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.Select;
 
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -71,7 +70,7 @@ public class StepDefinitions {
         WebDriver local;
         try {
             local = new ChromeDriver();
-        } catch(Exception e) {
+        } catch (Exception e) {
             local = new FirefoxDriver();
         }
 
@@ -86,7 +85,7 @@ public class StepDefinitions {
     private void reseta_senha() {
         try {
             driver.get("http://multibags.1dt.com.br/shop/customer/password.html");
-            Thread.sleep(5000);
+            driver.wait(5000);
             WebElement currentPassword = driver.findElement(By.xpath("//*[@id=\"currentPassword\"]"));
             currentPassword.sendKeys(this.password);
 
@@ -99,7 +98,7 @@ public class StepDefinitions {
         try {
             driver.get("http://multibags.1dt.com.br/shop/customer/customLogon.html");
 
-            Thread.sleep(5000);
+            driver.wait(5000);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -115,7 +114,7 @@ public class StepDefinitions {
     }
 
     @Então("Devo receber mensagem de erro {string}")
-    public void devo_receber_mensagem_de_erro(String string) {
+    public void devo_receber_mensagem_de_erro(String string) throws Exception {
         System.out.println(string);
         WebElement notifyError = driver.findElement(By.xpath("//*[@id=\"formError\"]"));
 
@@ -126,18 +125,18 @@ public class StepDefinitions {
     private void entra_troca_senha_tela() {
         try {
             driver.get("http://multibags.1dt.com.br/shop/customer/customLogon.html");
-            Thread.sleep(2000);
+            driver.wait(5000);
             WebElement login = driver.findElement(By.name("signin_userName"));
             WebElement senha = driver.findElement(By.name("signin_password"));
             WebElement signBtn = driver.findElement(By.id("genericLogin-button"));
             login.sendKeys("test@test");
             senha.sendKeys("123456");
             signBtn.click();
-            Thread.sleep(2000);
+            driver.wait(5000);
             WebElement changePassword = driver.findElement(
                     By.xpath("/html/body/div[3]/div/div/div[1]/div/ul/li[3]/a"));
             changePassword.click();
-            Thread.sleep(2000);
+            driver.wait(5000);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -148,7 +147,7 @@ public class StepDefinitions {
             int pageLoadTime_ms = 5000;
             int reactTime_ms = 2000;
             driver.get("http://multibags.1dt.com.br/shop/customer/registration.html");
-            Thread.sleep(pageLoadTime_ms);
+            driver.wait(pageLoadTime_ms);
             WebElement firstName = driver.findElement(By.name("billing.firstName"));
             WebElement lastName = driver.findElement(By.name("billing.lastName"));
             Select country = new Select(driver.findElement(By.name("billing.country")));
@@ -165,22 +164,22 @@ public class StepDefinitions {
             email.sendKeys("email_valido@example.com");
             password.sendKeys("dadada");
             Repeapassword.sendKeys("dada");
-            Thread.sleep(reactTime_ms);
+            driver.wait(reactTime_ms);
             // clicka em criar conta
             CreateBtn.click();
-            Thread.sleep(pageLoadTime_ms);
+            driver.wait(pageLoadTime_ms);
             WebElement errorMsgs = driver.findElement(By.id("customer.errors"));
             System.out.println("msgs de errors: \n\n");
             System.out.println(errorMsgs.getText());
             System.out.println("-------------------------------------------------");
-            Thread.sleep(4 * reactTime_ms); // tirar depois, to usando somente pra depurrar
+            driver.wait(4 * reactTime_ms); // tirar depois, to usando somente pra depurrar
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
     @Dado("senha é escrita")
-    public void senha_é_escrita() {
+    public void senha_é_escrita() throws Exception {
         entra_troca_senha_tela();
     }
 
@@ -219,7 +218,7 @@ public class StepDefinitions {
             currentPass.sendKeys("123456");
             WebElement newPass = driver.findElement(By.xpath("//*[@id=\"password\"]"));
             newPass.sendKeys("");
-            Thread.sleep(1000);
+            driver.wait(5000);
             WebElement confirmPass = driver.findElement(By.xpath("//*[@id=\"checkPassword\"]"));
             confirmPass.sendKeys(string);
         } catch (Exception e) {
@@ -254,8 +253,10 @@ public class StepDefinitions {
         confirmPass.sendKeys(string);
     }
 
-    public void closeBrowser() {
+    public void closeBrowser() throws Exception {
+        driver.wait(5000);
         driver.close();
+        driver.wait(5000);
     }
     //endregion
 
@@ -268,15 +269,15 @@ public class StepDefinitions {
     public void inicio_register(String string) {
         try {
             driver.get("http://multibags.1dt.com.br/shop/customer/registration.html");
-            Thread.sleep(pageLoadTime_ms);
+            driver.wait(pageLoadTime_ms);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
-    String trataEntEmail(String entEmail){
+    String trataEntEmail(String entEmail) {
         String email_final;
-        switch (entEmail){
+        switch (entEmail) {
             case "email_valido":
                 // precisamos de um email valido,
                 // mas se a gente sempre usar o mesmo vai dar erro
@@ -316,14 +317,14 @@ public class StepDefinitions {
         email.sendKeys(email_final);
         password.sendKeys(arg5);
         Repeatpassword.sendKeys(arg6);
-        Thread.sleep(reactTime_ms);
+        driver.wait(reactTime_ms);
     }
 
     @When("submeto as infos de cadastro, pressionando o botao {string}")
     public void submetoAsInfosDeCadastroPressionandoOBotao(String arg0) throws InterruptedException {
         WebElement CreateBtn = driver.findElement(By.cssSelector(".btn.btn-default.login-btn"));
         CreateBtn.click();
-        Thread.sleep(pageLoadTime_ms);
+        driver.wait(pageLoadTime_ms);
     }
 
     @Then("o form de cadastro deve ser gerar a msg {string}")
@@ -332,9 +333,9 @@ public class StepDefinitions {
         System.out.println("msgs de errors: \n\n");// TODO tirar depois, to usando somente pra depurrar
         String msgs_erro_obtida = errorMsgs.getText();// TODO tirar depois, to usando somente pra depurrar
         System.out.println(msgs_erro_obtida);// TODO tirar depois, to usando somente pra depurrar
-        System.out.println("\n\nesperado: "+ arg0);// TODO tirar depois, to usando somente pra depurrar
+        System.out.println("\n\nesperado: " + arg0);// TODO tirar depois, to usando somente pra depurrar
         System.out.println("-------------------------------------------------"); // TODO tirar depois, to usando somente pra depurrar
-        Thread.sleep(4*reactTime_ms); // TODO tirar depois, to usando somente pra depurrar
+        driver.wait(4 * reactTime_ms); // TODO tirar depois, to usando somente pra depurrar
         // quando temos mais que uma mensagem estamos usando o \n como separador
         // porem, as vezes, o sistema multibags retorna as mensagens na ordem trocada
         // por isso to colocando em um set e comparando o set pra ignorar a ordem
@@ -344,14 +345,14 @@ public class StepDefinitions {
     }
 
     @Then("o form de cadastro deve me redirecionar para {string}")
-    public void oFormDeCadastroDeveMeRedirecionarPara(String arg0) throws InterruptedException {
+    public void oFormDeCadastroDeveMeRedirecionarPara(String arg0) throws Exception {
         String urlexpected = "http://multibags.1dt.com.br/shop/customer/dashboard";
         String currentUrl = driver.getCurrentUrl();
         System.out.println(currentUrl); // TODO tirar depois, to usando somente pra depurrar
         String urlTrimmed = currentUrl.split(".html")[0]; // TODO tirar depois, to usando somente pra depurrar
         System.out.println(urlTrimmed); // TODO tirar depois, to usando somente pra depurrar
         System.out.println("-------------------------------------------------"); // TODO tirar depois, to usando somente pra depurrar
-        Thread.sleep(4*reactTime_ms); // TODO tirar depois, to usando somente pra depurrar
+        driver.wait(4 * reactTime_ms); // TODO tirar depois, to usando somente pra depurrar
         assertEquals(urlTrimmed, urlexpected);
         closeBrowser();
     }
@@ -548,7 +549,7 @@ public class StepDefinitions {
     }
 
     @E("o valor do {string} deve ser invalido")
-    public void oValorDoDeveSerInvalido(String arg0) {
+    public void oValorDoDeveSerInvalido(String arg0) throws Exception {
         WebElement message = driver.findElement(By.xpath("/html/body/div[3]/div/div/div[1]/div[2]/div"));
         assertEquals(arg0, message.getText());
         closeBrowser();
@@ -572,7 +573,7 @@ public class StepDefinitions {
     }
 
     @E("o {string} deve ser logado")
-    public void oDeveSerLogado(String arg0) {
+    public void oDeveSerLogado(String arg0) throws Exception {
         closeBrowser();
     }
 
