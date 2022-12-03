@@ -7,7 +7,6 @@ Feature: Cadastro de nova conta
 
   Background:
     Given Dado que "Pedro" acessou o site da multibags e entrou em Register
-    # And preencheu o formulário para realizar o cadastrado
 
   @falha
   Scenario Outline: infos invalidas ao submeter cadastro
@@ -34,6 +33,7 @@ Feature: Cadastro de nova conta
     Examples:
       | FirstName  | Lastname  | Country | State | Email         | Password | Repeatpassword  |
       | pedro      | bial      | Brazil  | rj    | email_valido  | dadada   | dadada          |
+      | pedro      | bial      | Brazil  |       | email_valido  | dadada   | dadada          |
 
   @falha
   Scenario Outline: Email previamente cadastrado
