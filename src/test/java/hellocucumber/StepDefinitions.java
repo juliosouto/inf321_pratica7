@@ -20,13 +20,6 @@ import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class IsItFriday {
-    static String isItFriday(String today) {
-        return "Friday".equals(today) ? "TGIF" : "Nope";
-    }
-
-}
-
 class User {
 
     String firstName;
@@ -68,27 +61,22 @@ class Login {
 
 public class StepDefinitions {
 
-    private String today;
-
-    private List<User> usuarios;
-
-    private String actualAnswer;
-
-    private Throwable throwable;
-
-    private String operator;
-
-    private String username;
-
-    private Boolean formFill;
-
     //region Selenium
-    private final WebDriver driverFirefox = new FirefoxDriver();
-    //private final WebDriver driverChrome = new ChromeDriver();
+    private final WebDriver driver;
     int pageLoadTime_ms = 5000;
     int reactTime_ms = 2000;
     //endregion
 
+    public StepDefinitions() {
+        WebDriver local;
+        try {
+            local = new ChromeDriver();
+        } catch(Exception e) {
+            local = new FirefoxDriver();
+        }
+
+        driver = local;
+    }
 
     //region Selenium Alterar Senha
     private String senhaConfirmacao;
@@ -97,9 +85,9 @@ public class StepDefinitions {
 
     private void reseta_senha() {
         try {
-            driverFirefox.get("http://multibags.1dt.com.br/shop/customer/password.html");
+            driver.get("http://multibags.1dt.com.br/shop/customer/password.html");
             Thread.sleep(5000);
-            WebElement currentPassword = driverFirefox.findElement(By.xpath("//*[@id=\"currentPassword\"]"));
+            WebElement currentPassword = driver.findElement(By.xpath("//*[@id=\"currentPassword\"]"));
             currentPassword.sendKeys(this.password);
 
         } catch (Exception e) {
@@ -109,7 +97,7 @@ public class StepDefinitions {
 
     private void set_senha_atual() {
         try {
-            WebElement currentPassword = driverFirefox.findElement(By.xpath("//*[@id=\"currentPassword\"]"));
+            WebElement currentPassword = driver.findElement(By.xpath("//*[@id=\"currentPassword\"]"));
             currentPassword.sendKeys(this.resetSenha);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -119,23 +107,24 @@ public class StepDefinitions {
     @Então("Devo receber mensagem de erro {string}")
     public void devo_receber_mensagem_de_erro(String string) {
         System.out.println(string);
-        WebElement notifyError = driverFirefox.findElement(By.xpath("//*[@id=\"formError\"]"));
+        WebElement notifyError = driver.findElement(By.xpath("//*[@id=\"formError\"]"));
 
         assertEquals(string, notifyError.getText());
+        closeBrowser();
     }
 
     private void entra_troca_senha_tela() {
         try {
-            driverFirefox.get("http://multibags.1dt.com.br/shop/customer/customLogon.html");
+            driver.get("http://multibags.1dt.com.br/shop/customer/customLogon.html");
             Thread.sleep(2000);
-            WebElement login = driverFirefox.findElement(By.name("signin_userName"));
-            WebElement senha = driverFirefox.findElement(By.name("signin_password"));
-            WebElement signBtn = driverFirefox.findElement(By.id("genericLogin-button"));
+            WebElement login = driver.findElement(By.name("signin_userName"));
+            WebElement senha = driver.findElement(By.name("signin_password"));
+            WebElement signBtn = driver.findElement(By.id("genericLogin-button"));
             login.sendKeys("test@test");
             senha.sendKeys("123456");
             signBtn.click();
             Thread.sleep(2000);
-            WebElement changePassword = driverFirefox.findElement(
+            WebElement changePassword = driver.findElement(
                     By.xpath("/html/body/div[3]/div/div/div[1]/div/ul/li[3]/a"));
             changePassword.click();
             Thread.sleep(2000);
@@ -148,16 +137,16 @@ public class StepDefinitions {
         try {
             int pageLoadTime_ms = 5000;
             int reactTime_ms = 2000;
-            driverFirefox.get("http://multibags.1dt.com.br/shop/customer/registration.html");
+            driver.get("http://multibags.1dt.com.br/shop/customer/registration.html");
             Thread.sleep(pageLoadTime_ms);
-            WebElement firstName = driverFirefox.findElement(By.name("billing.firstName"));
-            WebElement lastName = driverFirefox.findElement(By.name("billing.lastName"));
-            Select country = new Select(driverFirefox.findElement(By.name("billing.country")));
-            WebElement stateProvince = driverFirefox.findElement(By.name("billing.stateProvince"));
-            WebElement email = driverFirefox.findElement(By.name("emailAddress"));
-            WebElement password = driverFirefox.findElement(By.name("password"));
-            WebElement Repeapassword = driverFirefox.findElement(By.name("checkPassword"));
-            WebElement CreateBtn = driverFirefox.findElement(By.cssSelector(".btn.btn-default.login-btn"));
+            WebElement firstName = driver.findElement(By.name("billing.firstName"));
+            WebElement lastName = driver.findElement(By.name("billing.lastName"));
+            Select country = new Select(driver.findElement(By.name("billing.country")));
+            WebElement stateProvince = driver.findElement(By.name("billing.stateProvince"));
+            WebElement email = driver.findElement(By.name("emailAddress"));
+            WebElement password = driver.findElement(By.name("password"));
+            WebElement Repeapassword = driver.findElement(By.name("checkPassword"));
+            WebElement CreateBtn = driver.findElement(By.cssSelector(".btn.btn-default.login-btn"));
             // preenche as infos
             firstName.sendKeys("daniel");
             lastName.sendKeys("sobrenome");
@@ -170,11 +159,11 @@ public class StepDefinitions {
             // clicka em criar conta
             CreateBtn.click();
             Thread.sleep(pageLoadTime_ms);
-            WebElement errorMsgs = driverFirefox.findElement(By.id("customer.errors"));
+            WebElement errorMsgs = driver.findElement(By.id("customer.errors"));
             System.out.println("msgs de errors: \n\n");
             System.out.println(errorMsgs.getText());
             System.out.println("-------------------------------------------------");
-            Thread.sleep(4*reactTime_ms); // tirar depois, to usando somente pra depurrar
+            Thread.sleep(4 * reactTime_ms); // tirar depois, to usando somente pra depurrar
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -186,13 +175,13 @@ public class StepDefinitions {
     }
 
     @Quando("a {string} menor que 6 caracteres")
-    public void senha_menor_oito(String string) {
+    public void senha_menor_seis(String string) {
         System.out.println("resultado = " + string + " menor 6");
         this.password = string;
         assertTrue(string.length() < 6);
 
-        WebElement currentPass = driverFirefox.findElement(By.xpath("//*[@id=\"currentPassword\"]"));
-        WebElement newPass = driverFirefox.findElement(By.xpath("//*[@id=\"password\"]"));
+        WebElement currentPass = driver.findElement(By.xpath("//*[@id=\"currentPassword\"]"));
+        WebElement newPass = driver.findElement(By.xpath("//*[@id=\"password\"]"));
         currentPass.sendKeys("12345");
         newPass.sendKeys(this.password);
     }
@@ -201,7 +190,7 @@ public class StepDefinitions {
     public void senha_confirmacao_bate(String string) {
         this.senhaConfirmacao = string;
         assertEquals(this.password, this.senhaConfirmacao);
-        WebElement confirmPass = driverFirefox.findElement(By.xpath("//*[@id=\"checkPassword\"]"));
+        WebElement confirmPass = driver.findElement(By.xpath("//*[@id=\"checkPassword\"]"));
         confirmPass.sendKeys(this.senhaConfirmacao);
     }
 
@@ -216,12 +205,12 @@ public class StepDefinitions {
             System.out.println("resultado = " + string);
             assertTrue(string.isEmpty());
 
-            WebElement currentPass = driverFirefox.findElement(By.xpath("//*[@id=\"currentPassword\"]"));
+            WebElement currentPass = driver.findElement(By.xpath("//*[@id=\"currentPassword\"]"));
             currentPass.sendKeys("123456");
-            WebElement newPass = driverFirefox.findElement(By.xpath("//*[@id=\"password\"]"));
+            WebElement newPass = driver.findElement(By.xpath("//*[@id=\"password\"]"));
             newPass.sendKeys("");
             Thread.sleep(1000);
-            WebElement confirmPass = driverFirefox.findElement(By.xpath("//*[@id=\"checkPassword\"]"));
+            WebElement confirmPass = driver.findElement(By.xpath("//*[@id=\"checkPassword\"]"));
             confirmPass.sendKeys(string);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -236,7 +225,7 @@ public class StepDefinitions {
         assertNotEquals(this.password, this.senhaConfirmacao);
 
         set_senha_atual();
-        WebElement newPass = driverFirefox.findElement(By.xpath("//*[@id=\"password\"]"));
+        WebElement newPass = driver.findElement(By.xpath("//*[@id=\"password\"]"));
         newPass.sendKeys(string);
     }
 
@@ -251,42 +240,14 @@ public class StepDefinitions {
         this.senhaConfirmacao = string;
         assertNotEquals(this.password, this.senhaConfirmacao);
 
-        WebElement confirmPass = driverFirefox.findElement(By.xpath("//*[@id=\"checkPassword\"]"));
+        WebElement confirmPass = driver.findElement(By.xpath("//*[@id=\"checkPassword\"]"));
         confirmPass.sendKeys(string);
     }
 
-    @After()
     public void closeBrowser() {
-        driverFirefox.quit();
+        driver.close();
     }
     //endregion
-
-    @Given("an example scenario")
-    public void anExampleScenario() {
-    }
-
-    @When("all step definitions are implemented")
-    public void allStepDefinitionsAreImplemented() {
-    }
-
-    @Then("the scenario passes")
-    public void theScenarioPasses() {
-    }
-
-    @Given("today is {string}")
-    public void today_is(String today) {
-        this.today = today;
-    }
-
-    @When("I ask whether it's Friday yet")
-    public void i_ask_whether_it_s_Friday_yet() {
-        actualAnswer = IsItFriday.isItFriday(today);
-    }
-
-    @Then("I should be told {string}")
-    public void i_should_be_told(String expectedAnswer) {
-        assertEquals(expectedAnswer, actualAnswer);
-    }
 
     /***
      * Código da documentação acima:
@@ -296,7 +257,7 @@ public class StepDefinitions {
     @Given("Dado que {string} acessou o site da multibags e entrou em Register")
     public void inicio_register(String string) {
         try {
-            driverFirefox.get("http://multibags.1dt.com.br/shop/customer/registration.html");
+            driver.get("http://multibags.1dt.com.br/shop/customer/registration.html");
             Thread.sleep(pageLoadTime_ms);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -305,32 +266,29 @@ public class StepDefinitions {
 
     @Given("Preenchi o form de cadastro com {string}, {string}, {string}, {string}, {string}, {string} e {string}")
     public void preenchiOFormDeCadastroComE(String arg0, String arg1, String arg2, String arg3, String arg4, String arg5, String arg6) throws InterruptedException {
-        WebElement firstName = driverFirefox.findElement(By.name("billing.firstName"));
-        WebElement lastName = driverFirefox.findElement(By.name("billing.lastName"));
-        Select country = new Select(driverFirefox.findElement(By.name("billing.country")));
-        WebElement stateProvince = driverFirefox.findElement(By.name("billing.stateProvince"));
-        WebElement email = driverFirefox.findElement(By.name("emailAddress"));
-        WebElement password = driverFirefox.findElement(By.name("password"));
-        WebElement Repeapassword = driverFirefox.findElement(By.name("checkPassword"));
+        WebElement firstName = driver.findElement(By.name("billing.firstName"));
+        WebElement lastName = driver.findElement(By.name("billing.lastName"));
+        Select country = new Select(driver.findElement(By.name("billing.country")));
+        WebElement stateProvince = driver.findElement(By.name("billing.stateProvince"));
+        WebElement email = driver.findElement(By.name("emailAddress"));
+        WebElement password = driver.findElement(By.name("password"));
+        WebElement Repeapassword = driver.findElement(By.name("checkPassword"));
         firstName.sendKeys(arg0);
         lastName.sendKeys(arg1);
         country.selectByVisibleText(arg2);
         stateProvince.sendKeys(arg3);
         String email_final;
-        if(arg4.equals("email_valido")){
+        if (arg4.equals("email_valido")) {
             String email_prefix = "email+";
             String email_domain = "@bol.com.br";
             Random rand = new Random();
             int randnum = rand.nextInt(1000000);
             email_final = email_prefix + Integer.toString(randnum) + email_domain;
-        }
-        else if(arg4.equals("blank")){
+        } else if (arg4.equals("blank")) {
             email_final = "";
-        }
-        else if(arg4.equals("fixed")){
+        } else if (arg4.equals("fixed")) {
             email_final = "email@bol.com.br";
-        }
-        else{
+        } else {
             email_final = "email_invalido";
         }
         email.sendKeys(email_final);
@@ -341,40 +299,42 @@ public class StepDefinitions {
 
     @When("submeto as infos de cadastro, pressionando o botao {string}")
     public void submetoAsInfosDeCadastroPressionandoOBotao(String arg0) throws InterruptedException {
-        WebElement CreateBtn = driverFirefox.findElement(By.cssSelector(".btn.btn-default.login-btn"));
+        WebElement CreateBtn = driver.findElement(By.cssSelector(".btn.btn-default.login-btn"));
         CreateBtn.click();
         Thread.sleep(pageLoadTime_ms);
     }
 
     @Then("o form de cadastro deve ser gerar a msg {string}")
     public void oFormDeCadastroDeveSerGerarAMsg(String arg0) throws InterruptedException {
-        WebElement errorMsgs = driverFirefox.findElement(By.id("customer.errors"));
+        WebElement errorMsgs = driver.findElement(By.id("customer.errors"));
         System.out.println("msgs de errors: \n\n");
         String msgs_erro_obtida = errorMsgs.getText();
         System.out.println(msgs_erro_obtida);
-        System.out.println("\n\nesperado: "+ arg0);
+        System.out.println("\n\nesperado: " + arg0);
         System.out.println("-------------------------------------------------");
-        Thread.sleep(4*reactTime_ms); // TODO tirar depois, to usando somente pra depurrar
+        Thread.sleep(4 * reactTime_ms); // TODO tirar depois, to usando somente pra depurrar
         assertEquals(msgs_erro_obtida, arg0);
+        closeBrowser();
+        closeBrowser();
     }
 
     @Then("o form de cadastro deve me redirecionar para {string}")
     public void oFormDeCadastroDeveMeRedirecionarPara(String arg0) throws InterruptedException {
         String urlexpected = "http://multibags.1dt.com.br/shop/customer/dashboard";
-        String currentUrl = driverFirefox.getCurrentUrl();
+        String currentUrl = driver.getCurrentUrl();
         System.out.println(currentUrl);
         String urlTrimmed = currentUrl.split(".html")[0];
         System.out.println(urlTrimmed);
         System.out.println("-------------------------------------------------");
-        Thread.sleep(4*reactTime_ms); // TODO tirar depois, to usando somente pra depurrar
+        Thread.sleep(4 * reactTime_ms); // TODO tirar depois, to usando somente pra depurrar
         assertEquals(urlTrimmed, urlexpected);
+        closeBrowser();
     }
 
     @Dado("que {string} possui uma conta com senha fraca.")
     public void que_possui_uma_conta_com_senha_fraca(String string) {
         System.out.println("name =" + string);
     }
-
 
 
 //    @Given("Minha infos são:")
@@ -571,6 +531,7 @@ public class StepDefinitions {
         // TODO
         System.out.println("Write code here that turns the phrase above into concrete actions");
         System.out.println("throw new io.cucumber.java.PendingException();");
+        closeBrowser();
     }
 
     @Quando("Joao digitar corretamente as credenciais {string} e {string}:")
@@ -595,6 +556,7 @@ public class StepDefinitions {
         // TODO
         System.out.println("Write code here that turns the phrase above into concrete actions");
         System.out.println("throw new io.cucumber.java.PendingException();");
+        closeBrowser();
     }
 
     @Quando("Daniel tenta logar com {string} e com {string}")
