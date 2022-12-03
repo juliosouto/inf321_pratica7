@@ -15,8 +15,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.Select;
 
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -138,42 +137,6 @@ public class StepDefinitions {
                     By.xpath("/html/body/div[3]/div/div/div[1]/div/ul/li[3]/a"));
             changePassword.click();
             Thread.sleep(2000);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    private void registra_conta() {
-        try {
-            int pageLoadTime_ms = 5000;
-            int reactTime_ms = 2000;
-            driver.get("http://multibags.1dt.com.br/shop/customer/registration.html");
-            Thread.sleep(pageLoadTime_ms);
-            WebElement firstName = driver.findElement(By.name("billing.firstName"));
-            WebElement lastName = driver.findElement(By.name("billing.lastName"));
-            Select country = new Select(driver.findElement(By.name("billing.country")));
-            WebElement stateProvince = driver.findElement(By.name("billing.stateProvince"));
-            WebElement email = driver.findElement(By.name("emailAddress"));
-            WebElement password = driver.findElement(By.name("password"));
-            WebElement Repeapassword = driver.findElement(By.name("checkPassword"));
-            WebElement CreateBtn = driver.findElement(By.cssSelector(".btn.btn-default.login-btn"));
-            // preenche as infos
-            firstName.sendKeys("daniel");
-            lastName.sendKeys("sobrenome");
-            country.selectByVisibleText("Peru");
-            stateProvince.sendKeys("estado");
-            email.sendKeys("email_valido@example.com");
-            password.sendKeys("dadada");
-            Repeapassword.sendKeys("dada");
-            Thread.sleep(reactTime_ms);
-            // clicka em criar conta
-            CreateBtn.click();
-            Thread.sleep(pageLoadTime_ms);
-            WebElement errorMsgs = driver.findElement(By.id("customer.errors"));
-            System.out.println("msgs de errors: \n\n");
-            System.out.println(errorMsgs.getText());
-            System.out.println("-------------------------------------------------");
-            Thread.sleep(4 * reactTime_ms); // tirar depois, to usando somente pra depurrar
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
