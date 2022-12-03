@@ -33,7 +33,7 @@ Feature: Cadastro de nova conta
     Examples:
       | FirstName  | Lastname  | Country | State | Email         | Password | Repeatpassword  |
       | pedro      | bial      | Brazil  | rj    | email_valido  | dadada   | dadada          |
-
+      | pedro      | bial      | Brazil  |       | email_valido  | dadada   | dadada          |
   @falha
   Scenario Outline: Email previamente cadastrado
     Given Preenchi o form de cadastro com "<FirstName>", "<Lastname>", "<Country>", "<State>", "<Email>", "<Password>" e "<Repeatpassword>"
