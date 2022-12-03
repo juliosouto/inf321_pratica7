@@ -15,8 +15,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.Select;
 
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -90,6 +89,16 @@ public class StepDefinitions {
             WebElement currentPassword = driver.findElement(By.xpath("//*[@id=\"currentPassword\"]"));
             currentPassword.sendKeys(this.password);
 
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void acessa_login() {
+        try {
+            driver.get("http://multibags.1dt.com.br/shop/customer/customLogon.html");
+
+            Thread.sleep(5000);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -264,6 +273,31 @@ public class StepDefinitions {
         }
     }
 
+    String trataEntEmail(String entEmail){
+        String email_final;
+        switch (entEmail){
+            case "email_valido":
+                // precisamos de um email valido,
+                // mas se a gente sempre usar o mesmo vai dar erro
+                // falando que a conta ja existe
+                String email_prefix = "email+";
+                String email_domain = "@bol.com.br";
+                Random rand = new Random();
+                int randnum = rand.nextInt(1000000);
+                email_final = email_prefix + Integer.toString(randnum) + email_domain;
+                break;
+            case "blank":
+                email_final = "";
+                break;
+            case "fixed":
+                email_final = "email@bol.com.br";
+                break;
+            default:
+                email_final = "email_invalido";
+        }
+        return email_final;
+    }
+
     @Given("Preenchi o form de cadastro com {string}, {string}, {string}, {string}, {string}, {string} e {string}")
     public void preenchiOFormDeCadastroComE(String arg0, String arg1, String arg2, String arg3, String arg4, String arg5, String arg6) throws InterruptedException {
         WebElement firstName = driver.findElement(By.name("billing.firstName"));
@@ -272,28 +306,15 @@ public class StepDefinitions {
         WebElement stateProvince = driver.findElement(By.name("billing.stateProvince"));
         WebElement email = driver.findElement(By.name("emailAddress"));
         WebElement password = driver.findElement(By.name("password"));
-        WebElement Repeapassword = driver.findElement(By.name("checkPassword"));
+        WebElement Repeatpassword = driver.findElement(By.name("checkPassword"));
         firstName.sendKeys(arg0);
         lastName.sendKeys(arg1);
         country.selectByVisibleText(arg2);
         stateProvince.sendKeys(arg3);
-        String email_final;
-        if (arg4.equals("email_valido")) {
-            String email_prefix = "email+";
-            String email_domain = "@bol.com.br";
-            Random rand = new Random();
-            int randnum = rand.nextInt(1000000);
-            email_final = email_prefix + Integer.toString(randnum) + email_domain;
-        } else if (arg4.equals("blank")) {
-            email_final = "";
-        } else if (arg4.equals("fixed")) {
-            email_final = "email@bol.com.br";
-        } else {
-            email_final = "email_invalido";
-        }
+        String email_final = trataEntEmail(arg4);
         email.sendKeys(email_final);
         password.sendKeys(arg5);
-        Repeapassword.sendKeys(arg6);
+        Repeatpassword.sendKeys(arg6);
         Thread.sleep(reactTime_ms);
     }
 
@@ -306,27 +327,30 @@ public class StepDefinitions {
 
     @Then("o form de cadastro deve ser gerar a msg {string}")
     public void oFormDeCadastroDeveSerGerarAMsg(String arg0) throws InterruptedException {
-        WebElement errorMsgs = driver.findElement(By.id("customer.errors"));
-        System.out.println("msgs de errors: \n\n");
-        String msgs_erro_obtida = errorMsgs.getText();
-        System.out.println(msgs_erro_obtida);
-        System.out.println("\n\nesperado: " + arg0);
-        System.out.println("-------------------------------------------------");
-        Thread.sleep(4 * reactTime_ms); // TODO tirar depois, to usando somente pra depurrar
-        assertEquals(msgs_erro_obtida, arg0);
-        closeBrowser();
-        closeBrowser();
+        WebElement errorMsgs = driverFirefox.findElement(By.id("customer.errors"));
+        System.out.println("msgs de errors: \n\n");// TODO tirar depois, to usando somente pra depurrar
+        String msgs_erro_obtida = errorMsgs.getText();// TODO tirar depois, to usando somente pra depurrar
+        System.out.println(msgs_erro_obtida);// TODO tirar depois, to usando somente pra depurrar
+        System.out.println("\n\nesperado: "+ arg0);// TODO tirar depois, to usando somente pra depurrar
+        System.out.println("-------------------------------------------------"); // TODO tirar depois, to usando somente pra depurrar
+        Thread.sleep(4*reactTime_ms); // TODO tirar depois, to usando somente pra depurrar
+        // quando temos mais que uma mensagem estamos usando o \n como separador
+        // porem, as vezes, o sistema multibags retorna as mensagens na ordem trocada
+        // por isso to colocando em um set e comparando o set pra ignorar a ordem
+        Set<String> expected_set = new HashSet<String>(Arrays.asList(arg0.split("\n")));
+        Set<String> result_set = new HashSet<String>(Arrays.asList(msgs_erro_obtida.split("\n")));
+        assertEquals(expected_set, result_set);
     }
 
     @Then("o form de cadastro deve me redirecionar para {string}")
     public void oFormDeCadastroDeveMeRedirecionarPara(String arg0) throws InterruptedException {
         String urlexpected = "http://multibags.1dt.com.br/shop/customer/dashboard";
         String currentUrl = driver.getCurrentUrl();
-        System.out.println(currentUrl);
-        String urlTrimmed = currentUrl.split(".html")[0];
-        System.out.println(urlTrimmed);
-        System.out.println("-------------------------------------------------");
-        Thread.sleep(4 * reactTime_ms); // TODO tirar depois, to usando somente pra depurrar
+        System.out.println(currentUrl); // TODO tirar depois, to usando somente pra depurrar
+        String urlTrimmed = currentUrl.split(".html")[0]; // TODO tirar depois, to usando somente pra depurrar
+        System.out.println(urlTrimmed); // TODO tirar depois, to usando somente pra depurrar
+        System.out.println("-------------------------------------------------"); // TODO tirar depois, to usando somente pra depurrar
+        Thread.sleep(4*reactTime_ms); // TODO tirar depois, to usando somente pra depurrar
         assertEquals(urlTrimmed, urlexpected);
         closeBrowser();
     }
@@ -519,51 +543,45 @@ public class StepDefinitions {
 
     @Então("a aplicacao deve exibir uma mensagem de credenciais invalidas")
     public void aAplicacaoDeveExibirUmaMensagemDeCredenciaisInvalidas() {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
+
     }
 
     @E("o valor do {string} deve ser invalido")
     public void oValorDoDeveSerInvalido(String arg0) {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
+        WebElement message = driverFirefox.findElement(By.xpath("/html/body/div[3]/div/div/div[1]/div[2]/div"));
+        assertEquals(arg0, message.getText());
         closeBrowser();
     }
 
     @Quando("Joao digitar corretamente as credenciais {string} e {string}:")
     public void joao_digitar_corretamente_as_credenciais_e(String string, String string2) {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
+        WebElement login = driverFirefox.findElement(By.name("signin_userName"));
+        WebElement senha = driverFirefox.findElement(By.name("signin_password"));
+        WebElement signBtn = driverFirefox.findElement(By.id("genericLogin-button"));
+        login.sendKeys(string);
+        senha.sendKeys(string2);
+        signBtn.click();
     }
 
-    @Então("a aplicação deve exibir corretamente o {string} e carrinho conforme ultimo estado")
-    public void a_aplicação_deve_exibir_corretamente_o_e_carrinho_conforme_ultimo_estado(String string) {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
+    @Então("a aplicação deve exibir corretamente a tela de dashboard")
+    public void a_aplicação_deve_exibir_corretamente_a_tela_de_dashboard(String string) {
+        WebElement logoutElement = driverFirefox.findElement(By.xpath("/html/body/div[3]/div/div/div[1]/div/ul/li[4]/a"));
+        final String logoutText = " Logout";
+        assertEquals(logoutText, logoutElement.getText());
     }
 
     @E("o {string} deve ser logado")
     public void oDeveSerLogado(String arg0) {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
         closeBrowser();
     }
 
     @Quando("Daniel tenta logar com {string} e com {string}")
     public void daniel_tenta_logar_com_e_com(String string, String string2) {
-        // Write code here that turns the phrase above into concrete actions
-        // TODO
-        System.out.println("Write code here that turns the phrase above into concrete actions");
-        System.out.println("throw new io.cucumber.java.PendingException();");
+        WebElement login = driverFirefox.findElement(By.name("signin_userName"));
+        WebElement senha = driverFirefox.findElement(By.name("signin_password"));
+        WebElement signBtn = driverFirefox.findElement(By.id("genericLogin-button"));
+        login.sendKeys(string);
+        senha.sendKeys(string2);
+        signBtn.click();
     }
 }

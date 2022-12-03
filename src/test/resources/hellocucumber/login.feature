@@ -20,12 +20,12 @@ Funcionalidade: Realizar Login
     @invalid-credentials
     Exemplos:
       | username        | password     |  resultado |
-      | Joao@teste.com  | teste123     |  invalido  |
-      | teste@123.com   | senhaErrada  |  invalido  |
+      | Joao@teste.com  | teste123     |  Login Failed. Username or Password is incorrect.  |
+      | teste@123.com   | senhaErrada  |  Login Failed. Username or Password is incorrect.  |
 
   Esquema do Cenário: Realizar login de usuário cadastrado
     Quando Joao digitar corretamente as credenciais "<username>" e "<password>":
-    Então a aplicação deve exibir corretamente o "<primeiroNome>" e carrinho conforme ultimo estado
+    Então a aplicação deve exibir corretamente a tela de dashboard
     E o "<resultado>" deve ser logado
 
     @valid-credential
