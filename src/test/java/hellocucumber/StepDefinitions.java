@@ -15,7 +15,8 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.Select;
 
-import java.util.*;
+import java.util.List;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -327,7 +328,7 @@ public class StepDefinitions {
 
     @Then("o form de cadastro deve ser gerar a msg {string}")
     public void oFormDeCadastroDeveSerGerarAMsg(String arg0) throws InterruptedException {
-        WebElement errorMsgs = driverFirefox.findElement(By.id("customer.errors"));
+        WebElement errorMsgs = driver.findElement(By.id("customer.errors"));
         System.out.println("msgs de errors: \n\n");// TODO tirar depois, to usando somente pra depurrar
         String msgs_erro_obtida = errorMsgs.getText();// TODO tirar depois, to usando somente pra depurrar
         System.out.println(msgs_erro_obtida);// TODO tirar depois, to usando somente pra depurrar
@@ -548,16 +549,16 @@ public class StepDefinitions {
 
     @E("o valor do {string} deve ser invalido")
     public void oValorDoDeveSerInvalido(String arg0) {
-        WebElement message = driverFirefox.findElement(By.xpath("/html/body/div[3]/div/div/div[1]/div[2]/div"));
+        WebElement message = driver.findElement(By.xpath("/html/body/div[3]/div/div/div[1]/div[2]/div"));
         assertEquals(arg0, message.getText());
         closeBrowser();
     }
 
     @Quando("Joao digitar corretamente as credenciais {string} e {string}:")
     public void joao_digitar_corretamente_as_credenciais_e(String string, String string2) {
-        WebElement login = driverFirefox.findElement(By.name("signin_userName"));
-        WebElement senha = driverFirefox.findElement(By.name("signin_password"));
-        WebElement signBtn = driverFirefox.findElement(By.id("genericLogin-button"));
+        WebElement login = driver.findElement(By.name("signin_userName"));
+        WebElement senha = driver.findElement(By.name("signin_password"));
+        WebElement signBtn = driver.findElement(By.id("genericLogin-button"));
         login.sendKeys(string);
         senha.sendKeys(string2);
         signBtn.click();
@@ -565,7 +566,7 @@ public class StepDefinitions {
 
     @Então("a aplicação deve exibir corretamente a tela de dashboard")
     public void a_aplicação_deve_exibir_corretamente_a_tela_de_dashboard(String string) {
-        WebElement logoutElement = driverFirefox.findElement(By.xpath("/html/body/div[3]/div/div/div[1]/div/ul/li[4]/a"));
+        WebElement logoutElement = driver.findElement(By.xpath("/html/body/div[3]/div/div/div[1]/div/ul/li[4]/a"));
         final String logoutText = " Logout";
         assertEquals(logoutText, logoutElement.getText());
     }
@@ -577,9 +578,9 @@ public class StepDefinitions {
 
     @Quando("Daniel tenta logar com {string} e com {string}")
     public void daniel_tenta_logar_com_e_com(String string, String string2) {
-        WebElement login = driverFirefox.findElement(By.name("signin_userName"));
-        WebElement senha = driverFirefox.findElement(By.name("signin_password"));
-        WebElement signBtn = driverFirefox.findElement(By.id("genericLogin-button"));
+        WebElement login = driver.findElement(By.name("signin_userName"));
+        WebElement senha = driver.findElement(By.name("signin_password"));
+        WebElement signBtn = driver.findElement(By.id("genericLogin-button"));
         login.sendKeys(string);
         senha.sendKeys(string2);
         signBtn.click();
